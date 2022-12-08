@@ -1,6 +1,6 @@
 const Context = () => {
   return (
-    <div class="context-section">
+    <div className="context-section">
       <h2 className="context-title">Parallax Scrolling Effects</h2>
       <p className="context-paragraph">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod

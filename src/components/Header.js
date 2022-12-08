@@ -1,38 +1,55 @@
+import {Link} from 'react-router-dom';
+
 const Header = () => {
-  const links = [
-    {
-      name: "home",
-      id: "home",
-    },
-    {
-      name: "about",
-      id: "about",
-    },
-    {
-      name: "work",
-      id: "work",
-    },
-    {
-      name: "contact",
-      id: "contact",
-    },
-  ];
-  return (
-    <header>
-      <a href="/" className="logo">
-        Lunar
-      </a>
-      <ul className="nav-menu">
-        {links.map((link) => (
-          <li className="nav-item">
-            <a href="/" className="nav-link">
-              {link.name}
+    const links = [
+        {
+            name: "home",
+            id: "home",
+            link: "/"
+        },
+        {
+            name: "about",
+            id: "about",
+            link: "/about"
+        },
+        {
+            name: "test",
+            id: "test",
+            link: "/test"
+        },
+        {
+            name: "contact",
+            id: "contact",
+            link: "/contact"
+        },
+        {
+            name: "Github",
+            id: "github",
+            link: "https://github.com/duongp131994/blog-react",
+            external: true
+        },
+    ];
+    return (
+        <header>
+            <a href="/" className="logo">
+                Dandelions
             </a>
-          </li>
-        ))}
-      </ul>
-    </header>
-  );
+            <ul className="nav-menu">
+                {links.map((link) => (
+                    <li className="nav-item" key={link.id}>
+                        {!link.external
+                            ? <Link to={link.link} className="nav-link">
+                                {link.name}
+                            </Link>
+                            : <a href={link.link} className="nav-link">
+                                {link.name}
+                            </a>
+                        }
+                    </li>
+                ))}
+            </ul>
+        </header>
+    );
 };
 
 export default Header;
