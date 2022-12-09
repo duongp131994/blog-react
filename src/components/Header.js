@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom';
+import {Link, useMatch, useResolvedPath} from 'react-router-dom';
 
 const Header = () => {
     const links = [
@@ -29,24 +29,43 @@ const Header = () => {
             external: true
         },
     ];
+
+    const CustomLink = ({children, to, ...props}) => {
+        const resolved = useResolvedPath(to)
+        const match = useMatch({path: resolved.pathname, end: true})
+        console.log(children, to, resolved, match)
+        return (
+            <li className={match ? 'active' : ''}>
+                <Link to={to} {...props}>
+                    {children}
+                </Link>
+            </li>
+        )
+    }
+
     return (
         <header>
             <a href="/" className="logo">
                 Dandelions
             </a>
             <ul className="nav-menu">
-                {links.map((link) => (
-                    <li className="nav-item" key={link.id}>
-                        {!link.external
-                            ? <Link to={link.link} className="nav-link">
+                {links.map((link) => {
+                    if (!link.external) {
+                        return (
+                            <CustomLink key={link.id} to={link.link} className="nav-link">
                                 {link.name}
-                            </Link>
-                            : <a href={link.link} className="nav-link">
-                                {link.name}
-                            </a>
-                        }
-                    </li>
-                ))}
+                            </CustomLink>
+                        )
+                    } else {
+                        return (
+                            <li key={link.id} className="nav-item">
+                                <a href={link.link} className="nav-link">
+                                    {link.name}
+                                </a>
+                            </li>
+                        )
+                    }}
+                )}
             </ul>
         </header>
     );
