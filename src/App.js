@@ -1,27 +1,34 @@
-import React from "react";
+import React, {Component, Fragment} from 'react';
 import "./assets/style/style.css";
-import {useNavigate, Routes, Route} from 'react-router-dom';
+import {Routes, Route} from 'react-router-dom';
 
-import Home from "./pages/Home";
-import About from "./pages/About";
-import NotFound from "./pages/NotFound";
-import Test from "./pages/TestComponent";
+import {publicRoutes} from "./routers";
 import Header from "./components/Header";
 
 function App() {
-  // const navigate = useNavigate();
-
-  return (
-    <div className="App">
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home/>}/>
-        <Route path="/about" element={<About/>}/>
-        <Route path="/test" element={<Test/>}/>
-        <Route path='*' element={<NotFound />} />
-      </Routes>
-    </div>
-  );
+    return (
+        <div className="App">
+            <Header/>
+            <Routes>
+                {
+                    publicRoutes.map((route, index) => {
+                        if (route.component) {
+                            // const Layout = route.layout === false ? Fragment : (route.layout || DefaultLayout)
+                            const Page = route.component
+                            // return <Route key={index} path={route.path} element={<Layout><Page/></Layout>}/>
+                            return <Route key={index} path={route.path} element={<Page/>}/>
+                        }
+                    })
+                }
+            </Routes>
+            {/*<Routes>*/}
+            {/*  <Route path="/" element={<Home/>}/>*/}
+            {/*  <Route path="/about" element={<About/>}/>*/}
+            {/*  <Route path="/test" element={<Test/>}/>*/}
+            {/*  <Route path='*' element={<NotFound />} />*/}
+            {/*</Routes>*/}
+        </div>
+    );
 }
 
 export default App;

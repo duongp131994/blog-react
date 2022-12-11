@@ -1,39 +1,18 @@
-import {Link, useMatch, useResolvedPath} from 'react-router-dom';
+import {Link, Route, useMatch, useResolvedPath} from 'react-router-dom'
+import React from "react"
+
+import { AntDesignOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Divider, Tooltip } from 'antd';
+
+import {publicRoutes} from "../routers";
+
+import Logo from "../assets/images/logo.svg";
 
 const Header = () => {
-    const links = [
-        {
-            name: "home",
-            id: "home",
-            link: "/"
-        },
-        {
-            name: "about",
-            id: "about",
-            link: "/about"
-        },
-        {
-            name: "test",
-            id: "test",
-            link: "/test"
-        },
-        {
-            name: "contact",
-            id: "contact",
-            link: "/contact"
-        },
-        {
-            name: "Github",
-            id: "github",
-            link: "https://github.com/duongp131994/blog-react",
-            external: true
-        },
-    ];
-
     const CustomLink = ({children, to, ...props}) => {
+        console.log(children, to)
         const resolved = useResolvedPath(to)
         const match = useMatch({path: resolved.pathname, end: true})
-        console.log(children, to, resolved, match)
         return (
             <li className={match ? 'active' : ''}>
                 <Link to={to} {...props}>
@@ -45,27 +24,33 @@ const Header = () => {
 
     return (
         <header>
-            <a href="/" className="logo">
+            <a href="/" className="logo" key="homePage">
+                <Avatar src={Logo} size={45} style={{ backgroundColor: 'rgb(54 32 93)', marginRight: '10px', verticalAlign: 'text-bottom' }}/>
                 Dandelions
             </a>
             <ul className="nav-menu">
-                {links.map((link) => {
-                    if (!link.external) {
-                        return (
-                            <CustomLink key={link.id} to={link.link} className="nav-link">
-                                {link.name}
-                            </CustomLink>
-                        )
-                    } else {
-                        return (
-                            <li key={link.id} className="nav-item">
-                                <a href={link.link} className="nav-link">
-                                    {link.name}
-                                </a>
-                            </li>
-                        )
-                    }}
-                )}
+                {
+                    publicRoutes.map((route) => {
+                        if (route.link) {
+                            if (!route.external) {
+                                console.log(route)
+                                return (
+                                    <CustomLink key={route.id} to={route.link} className="nav-link">
+                                        {route.name}
+                                    </CustomLink>
+                                )
+                            } else {
+                                return (
+                                    <li key={route.id} className="nav-item">
+                                        <a href={route.link} className="nav-link">
+                                            {route.name}
+                                        </a>
+                                    </li>
+                                )
+                            }
+                        }
+                    })
+                }
             </ul>
         </header>
     );
