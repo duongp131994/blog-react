@@ -1,7 +1,6 @@
 import Context from '../components/Context'
 import React from "react";
 
-
 const About = () => {
     return (
         <>

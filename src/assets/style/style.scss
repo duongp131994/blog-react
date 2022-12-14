@@ -148,6 +148,23 @@ section {
   opacity: 0.6;
 }
 
+.custom-editor {
+  padding: 24px 200px;
+}
+
+.DraftEditor-root {
+  min-height: 200px;
+  border: solid 1px #bbb;
+  box-sizing: border-box;
+  border: 1px solid #ddd;
+  cursor: text;
+  padding: 16px;
+  border-radius: 2px;
+  margin-bottom: 2em;
+  box-shadow: inset 0px 1px 8px -3px #ABABAB;
+  background: #fefefe;
+}
+
 @media screen and (max-width: 2100px) {
   #text {
     top: 45%;

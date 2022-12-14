@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React from 'react';
 import "./assets/style/style.css";
 import {Routes, Route} from 'react-router-dom';
 

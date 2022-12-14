@@ -1,3 +1,6 @@
+import RichtextEditor from "../components/TextEditor";
+import React from "react";
+
 const Context = () => {
   return (
     <div className="context-section">
@@ -70,6 +73,8 @@ const Context = () => {
         ultrices tincidunt arcu non sodales neque sodales ut. Condimentum vitae
         sapien pellentesque habitant morbi tristique senectus et.
       </p>
+
+      <RichtextEditor/>
     </div>
   );
 };
