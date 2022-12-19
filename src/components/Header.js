@@ -1,9 +1,6 @@
 import {Link, Route, useMatch, useResolvedPath} from 'react-router-dom'
 import React from "react"
 
-import { AntDesignOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Divider, Tooltip } from 'antd';
-
 import {publicRoutes} from "../routers";
 
 import Logo from "../assets/images/logo.svg";
@@ -25,7 +22,7 @@ const Header = () => {
     return (
         <header>
             <a href="/" className="logo" key="homePage">
-                <Avatar src={Logo} size={45} style={{ backgroundColor: 'rgb(54 32 93)', marginRight: '10px', verticalAlign: 'text-bottom' }}/>
+                <img alt="Logo" src={Logo} style={{ width: 45, height: 45, backgroundColor: 'rgb(54 32 93)', marginRight: '10px', verticalAlign: 'text-bottom' }}/>
                 Dandelions
             </a>
             <ul className="nav-menu">
