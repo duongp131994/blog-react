@@ -1,10 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+require('dotenv').config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: ['http://localhost:3000', 'http://localhost:3001']
+}));
 
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
@@ -23,7 +27,7 @@ app.get("/", (req, res) => {
 require("./routes/index.js")(app);
 
 // set port, listen for requests
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
 });

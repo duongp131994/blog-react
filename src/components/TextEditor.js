@@ -3,32 +3,45 @@ import { EditorState, convertToRaw } from 'draft-js';
 import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import axios from 'axios'
+const API_URL = "http://localhost:3001"
 
 const RichtextEditor = () => {
     const [editorState, setEditorState] = useState(EditorState.createEmpty())
+
     const uploadImageCallBack = (file) => {
         return new Promise(
             (resolve, reject) => {
-                const xhr = new XMLHttpRequest();
-                xhr.open('POST', 'https://api.imgur.com/3/image');
-                xhr.setRequestHeader('Authorization', 'Client-ID 991a0e15ea25453');
-                const data = new FormData();
-                data.append('image', file);
-                xhr.send(data);
-                xhr.addEventListener('load', () => {
-                    const response = JSON.parse(xhr.responseText);
-                    resolve(response);
-                });
-                xhr.addEventListener('error', () => {
-                    const error = JSON.parse(xhr.responseText);
-                    reject(error);
-                });
+                const uploadData = new FormData();
+                uploadData.append("file", file, "file");
+
+
+                axios.post(API_URL + '/api/file-upload', uploadData)
+                    .then((res) => {
+                        resolve({data: {link: res.data.link}});
+                    })
+                    .catch((err) => {reject(err)})
+                    .then((res) => {
+                    })
             }
         );
     }
 
     const onEditorStateChange = (editorState) => {
         setEditorState(editorState)
+    };
+    const saveContent = async () => {
+        let editorContent = draftToHtml(convertToRaw(editorState.getCurrentContent()))
+
+        await axios.get(API_URL + '/api/upload-content', editorContent)
+            .then((res) => {
+                resolve({data: {link: res.data.link}});
+            })
+            .catch((err) => {
+                reject(err)
+            })
+            .then((res) => {
+            })
     };
     return (
         <div className="custom-editor">
@@ -46,10 +59,7 @@ const RichtextEditor = () => {
                     image: { uploadCallback: uploadImageCallBack, alt: { present: true, mandatory: true } },
                 }}
             />
-            <textarea
-                disabled
-                value={draftToHtml(convertToRaw(editorState.getCurrentContent()))}
-            />
+            <button onClick={saveContent}>Submit</button>
         </div>
     );
 };
