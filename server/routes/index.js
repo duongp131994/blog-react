@@ -3,6 +3,9 @@ module.exports = app => {
     const newRoutes = require('./newRoutes');
     const fileUploader = require('../configs/cloudinaryConfig');
 
+    //url auth
+
+    //url post
     app.use('/api/news', newRoutes);
 
     app.post('/api/file-upload', fileUploader.single('file'), (req, res, next) => {

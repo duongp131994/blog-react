@@ -4,7 +4,7 @@ import { Editor } from 'react-draft-wysiwyg';
 import draftToHtml from 'draftjs-to-html';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import axios from 'axios'
-const API_URL = "http://localhost:3001"
+const API_URL = "http://localhost:3000"
 
 const RichtextEditor = () => {
     const [editorState, setEditorState] = useState(EditorState.createEmpty())
@@ -14,7 +14,6 @@ const RichtextEditor = () => {
             (resolve, reject) => {
                 const uploadData = new FormData();
                 uploadData.append("file", file, "file");
-
 
                 axios.post(API_URL + '/api/file-upload', uploadData)
                     .then((res) => {
