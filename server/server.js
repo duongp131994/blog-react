@@ -7,16 +7,15 @@ var passport = require('passport');
 var jwt = require('jsonwebtoken');
 
 const app = express();
-app.use(cors({
-    credentials: true,
-    origin: ['http://localhost:3000', 'http://localhost:3001']
+app.use(cors());
+
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({
+    extended: true
 }));
 
 // parse requests of content-type - application/json
-app.use(bodyParser.json());
-
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
 // set port, listen for requests
 require("./routes/index.js")(app);

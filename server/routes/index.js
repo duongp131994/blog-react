@@ -7,14 +7,15 @@ module.exports = app => {
     const userControllers = require('../controllers/userControllers.js');
 
     //user
-    router.post('user/register', userControllers.register);
+    app.post("/user/register", userControllers.register);
+    app.post('/user/login', userControllers.login);
+    // app.use('/user', router);
 
     //url post
     app.use('/api/news', newRoutes);
 
     //upload image
     app.post('/api/file-upload', fileUploader.single('file'), (req, res, next) => {
-        console.log(req, res)
         if (!req.file) {
             next(new Error('No file uploaded!'));
             return;
