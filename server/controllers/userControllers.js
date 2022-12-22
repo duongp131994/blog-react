@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const authMethod = require('../configs/authMethods');
 const db = require("../models");
 const usersModel = db.users;
 const Op = db.Sequelize.Op;
@@ -55,19 +56,32 @@ exports.login = async (req, res) => {
     };
     const accessToken = await authMethod.generateToken(
         dataForAccessToken,
-        accessTokenSecret,
-        accessTokenLife,
+        process.env.ACCESS_TOKEN_SECRET,
+        process.env.ACCESS_TOKEN_LIFE,
     );
+
     if (!accessToken) {
         return res
             .status(401)
             .send('Đăng nhập không thành công, vui lòng thử lại.');
     }
 
-    let refreshToken = randToken.generate(jwtVariable.refreshTokenSize); // tạo 1 refresh token ngẫu nhiên
+    // tạo 1 refresh token ngẫu nhiên
+    let refreshToken = await authMethod.generateToken(
+        dataForAccessToken,
+        process.env.REFRESH_TOKEN_SECRET,
+        null,
+    );
     if (!user.refreshToken) {
         // Nếu user này chưa có refresh token thì lưu refresh token đó vào database
-        await userModel.updateRefreshToken(user.username, refreshToken);
+        const updatedRows = await usersModel.update(
+            {
+                refresh_token: refreshToken,
+            },
+            {
+                where: { id: user.id },
+            }
+        );
     } else {
         // Nếu user này đã có refresh token thì lấy refresh token đó từ database
         refreshToken = user.refreshToken;
