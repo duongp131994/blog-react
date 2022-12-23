@@ -16,7 +16,8 @@ exports.create = (req, res) => {
     // Create a New
     const newData = {
         title: req.body.title,
-        description: req.body.description,
+        content: req.body.content,
+        comment: '',
         published: req.body.published ? req.body.published : false
     };
 
@@ -66,10 +67,29 @@ exports.findOne = (req, res) => {
 };
 
 // Update a New by the id in the request
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
     const id = req.params.id;
 
-    New.update(req.body, {
+    const oldData = await New.findByPk(id)
+    if (oldData === null) {
+        res.status(400).send({
+            message: "The news doesn't exist."
+        });
+    }
+
+    //dang lam
+    if (req.body.comment) {
+        oldData.comment = JSON.parse(oldData.comment)
+        oldData.comment.push(req.body.comment)
+    }
+
+    const dataUpdate = {
+        title: req.body.title,
+        comment: req.body.comment,
+        content: req.body.content
+    }
+
+    New.update(dataUpdate, {
         where: { id: id }
     })
         .then(num => {
@@ -94,7 +114,6 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    console.log(req)
     New.destroy({
         where: { id: id }
     })

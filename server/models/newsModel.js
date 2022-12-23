@@ -4,7 +4,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false
         },
-        description: {
+        content: {
+            type: Sequelize.STRING
+        },
+        comment: {
             type: Sequelize.STRING
         },
         published: {
