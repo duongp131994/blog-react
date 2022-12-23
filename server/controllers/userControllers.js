@@ -164,7 +164,30 @@ exports.findAll = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    usersModel.update(req.body, {
+    const dataUpdate = {}
+
+    //update title
+    if (req.body.title) {
+        dataUpdate.title = req.body.title
+    }
+
+    //update content
+    if (req.body.content) {
+        dataUpdate.content = req.body.content
+    }
+
+    //update comments list
+    if (req.body.comment) {
+        dataUpdate.comment = req.body.comment
+    }
+
+    if (!dataUpdate.title && !dataUpdate.content && !dataUpdate.comment) {
+        res.status(200).send({
+            message: "Update failed!"
+        });
+    }
+
+    usersModel.update(dataUpdate, {
         where: { id: id }
     })
         .then(num => {

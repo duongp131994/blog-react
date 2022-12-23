@@ -70,23 +70,27 @@ exports.findOne = (req, res) => {
 exports.update = async (req, res) => {
     const id = req.params.id;
 
-    const oldData = await New.findByPk(id)
-    if (oldData === null) {
-        res.status(400).send({
-            message: "The news doesn't exist."
-        });
+    const dataUpdate = {}
+
+    //update title
+    if (req.body.title) {
+        dataUpdate.title = req.body.title
     }
 
-    //dang lam
+    //update content
+    if (req.body.content) {
+        dataUpdate.content = req.body.content
+    }
+
+    //update comments list
     if (req.body.comment) {
-        oldData.comment = JSON.parse(oldData.comment)
-        oldData.comment.push(req.body.comment)
+        dataUpdate.comment = req.body.comment
     }
 
-    const dataUpdate = {
-        title: req.body.title,
-        comment: req.body.comment,
-        content: req.body.content
+    if (!dataUpdate.title && !dataUpdate.content && !dataUpdate.comment) {
+        res.status(200).send({
+            message: "Update failed!"
+        });
     }
 
     New.update(dataUpdate, {

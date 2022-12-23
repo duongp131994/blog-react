@@ -6,7 +6,7 @@ exports.generateToken = (payload, secretSignature, tokenLife) => {
             payload,
             secretSignature,
             {
-                algorithm: 'HS256',
+                algorithm: 'HS512',
                 expiresIn: tokenLife,
             }
         ) : jwt.sign(
