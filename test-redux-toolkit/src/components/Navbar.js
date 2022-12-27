@@ -1,11 +1,11 @@
-import React from "react";
+import React, {memo} from "react";
 
 import {useSelector} from "react-redux";
 import {todosSelector} from "../store/reducers/todosSlice";
 
-const Navbar = () => {
+const Navbar = memo(() => {
     const todos = useSelector(todosSelector)
-
+    console.log(todos.length)
     return (
         <div className={'navbar'}>
             <h1>my react app todos</h1>
@@ -16,6 +16,6 @@ const Navbar = () => {
             </ul>
         </div>
     )
-}
+})
 
 export {Navbar}
