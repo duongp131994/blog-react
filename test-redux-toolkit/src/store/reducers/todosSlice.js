@@ -1,29 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit'
+import axios from "axios";
 
 const todosSlice = createSlice({
     name: 'todos',
     initialState: {//first state
         allTodos: [
-            {
-                id: 1,
-                title: 'viec 1',
-                completed: false
-            },
-            {
-                id: 2,
-                title: 'viec 2',
-                completed: false
-            },
-            {
-                id: 3,
-                title: 'viec 3',
-                completed: true
-            },
-            {
-                id: 4,
-                title: 'viec 4',
-                completed: true
-            },
+
         ],
         maxTodo: 4
     },
@@ -54,16 +36,29 @@ const todosSlice = createSlice({
         deleteTodo(state, action) {
             let todoId = action.payload
             state.allTodos = state.allTodos.filter(todo => todo.id !== todoId)
+        },
+        addAllTodos(state, action) {
+            state.allTodos = action.payload
+            state.maxTodo = state.allTodos.length
         }
     }
 })
 
+//fetch data
+const getTodos = () =>  async dispatch => {
+    try {
+        const response = await axios.get('https://jsonplaceholder.typicode.com/todos?_limit=10')
+        dispatch(addAllTodos(response.data))
+    } catch (e) {
+        console.warn(e)
+    }
+}
 //reducer
 const todosReducer1 = todosSlice.reducer
 
 //selector
 const todosSelector = state => state.todosReducer2.allTodos
 //action
-const  {addTodo, markComplete, deleteTodo} = todosSlice.actions
+const  {addTodo, markComplete, deleteTodo, addAllTodos} = todosSlice.actions
 
-export {todosSelector, todosReducer1, addTodo, markComplete, deleteTodo}
+export {todosSelector, todosReducer1, addTodo, markComplete, deleteTodo, getTodos}
