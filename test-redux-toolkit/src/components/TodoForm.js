@@ -13,7 +13,7 @@ const TodoForm = memo(() => {
 
     const addSingleTodo = event => {
         event.preventDefault()
-        dispatch(addTodo({title, completed: false}))
+        dispatch(addTodo({title}))
         setTitle('')
     }
 
