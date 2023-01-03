@@ -5,6 +5,7 @@ const usersModel = db.users;
 
 exports.isAuth = async (req, res, next) => {
     const accessTokenFromHeader = req.headers.x_authorization;
+
     if (!accessTokenFromHeader) {
         return res.status(400).send('Access token not found.');
     }
@@ -15,15 +16,31 @@ exports.isAuth = async (req, res, next) => {
     }
 
     let user = await usersModel.findOne({where: {username: verified.username}});
-    // if () {
-    //
-    // }
 
     req.user = user
     return next();
 };
 
-checkRole = (req) => {
+exports.isRole = async (req, res, next) => {
+    // console.log(req.params, req.query, req.baseUrl, req.originalUrl, req.route)
+    console.log(req.params, req.query, req.baseUrl, req.originalUrl, req.route)
 
-    return true;
-}
+    const role = req.user.role || null
+
+    switch(role) {
+        case 'admin':
+            // code block
+            break;
+        case 'edit':
+            // code block
+            break;
+        case null:
+            // code block
+            break;
+        default:
+        // code block
+    }
+
+    console.log(role)
+    return next();
+};

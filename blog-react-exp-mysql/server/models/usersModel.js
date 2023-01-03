@@ -13,7 +13,7 @@ module.exports = (dbSequelize, Sequelize) => {
                 type: Sequelize.STRING,
                 allowNull: false
             },
-            role: {
+            role: {//admin, edit, public(null)
               type: Sequelize.STRING
             },
             refresh_token: {

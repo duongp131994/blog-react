@@ -2,7 +2,7 @@ module.exports = app => {
     const express = require('express');
     const router = express.Router();
     const userRoutes = require('./userRoutes');
-    // const newRoutes = require('./newRoutes');
+    const postRoutes = require('./postRoutes');
     // const fileUploader = require('../configs/cloudinaryConfig');
 
     const userControllers = require('../controllers/userController');
@@ -21,7 +21,7 @@ module.exports = app => {
     // router.get('/search/user', userControllers.getUsers);
 
     //url post
-    // app.use('/api/news', newRoutes);
+    app.use('/api/post', postRoutes);
 
     //upload image
     // app.post('/api/file-upload', fileUploader.single('file'), (req, res, next) => {

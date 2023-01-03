@@ -4,24 +4,24 @@ const user = require("../controllers/userController.js");
 const middleware = require('../configs/middleware');
 
 // Create a new user
-// router.post("/signup", user.register);
+router.post("/signup", user.register);
 
 // Retrieve all user
-// router.post("/signin", user.login);
+router.post("/signin", user.login);
 
-// Retrieve all user
-// router.post("/refresh", user.refreshToken);
+// Retrieve accessToken
+router.post("/refresh", user.refreshToken);
 
 // Retrieve all published user
-// router.get("/all", user.findAll);
+router.get("/search", user.findAll);
 
 // Retrieve a single user with id
 router.get("/:id", middleware.isAuth, user.findOne); // check user role theo user token
 
 // Update a user with id
-// router.put("/:id", middleware.isAuth, user.update);
+router.put("/:id", middleware.isAuth, user.update);
 
 // Delete a user with id
-// router.delete("/:id", middleware.isAuth, user.delete);
+router.delete("/:id", middleware.isAuth, user.delete);
 
 module.exports = router;

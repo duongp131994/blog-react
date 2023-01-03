@@ -6,9 +6,13 @@ const Op = db.Sequelize.Op;
 require('dotenv').config();
 
 exports.register = (req, res) => {
-    console.log(req.body);
     if (!req.body.username) {
         res.status(400).send({message: "User name can not be empty!"});
+        return;
+    }
+
+    if (!req.body.email) {
+        res.status(400).send({message: "Email can not be empty!"});
         return;
     }
 
@@ -18,27 +22,27 @@ exports.register = (req, res) => {
     }
 
     const username = req.body.username.toLowerCase();
-    const condition = username ? {username: `${username}`} : null;
+    const email = req.body.email;
+    const condition = username ? {email: `${email}`} : null;
     const hashPassword = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
 
     usersModel.findOrCreate({
         where: condition,
-        defaults: {username: username, password: hashPassword}
+        defaults: {username: username, password: hashPassword, email: email}
     }).then(([user, created]) => {
         if (created) {
-            res.status(200).send({username: username, id: user.id});
-            return false;
+            return res.status(200).send({username: username, id: user.id, email: email});
         }
-        res.status(500).send({
+        return res.status(500).send({
             message: "This account has already existed."
         });
     })
 };
 exports.login = async (req, res) => {
-    const username = req.body.username.toLowerCase() || 'test';
-    const password = req.body.password || '12345';
+    const email = req.body.email;
+    const password = req.body.password;
 
-    const user = await usersModel.findOne({ where: { username: username } });
+    const user = await usersModel.findOne({where: {email: email}});
     if (!user) {
         return res.status(401).send('Username does not exist.');
     }
@@ -58,9 +62,7 @@ exports.login = async (req, res) => {
     );
 
     if (!accessToken) {
-        return res
-            .status(401)
-            .send('Login failed, please try again.');
+        return res.status(401).send('Login failed, please try again.');
     }
 
     // tạo 1 refresh token ngẫu nhiên
@@ -82,34 +84,20 @@ exports.login = async (req, res) => {
     if (updateRefreshToken) {
         const updatedRows = await usersModel.update(
             {refresh_token: refreshToken},
-            {where: { id: user.id }}
+            {where: {id: user.id}}
         );
     }
+
+    const userData = {username: user.username, id: user.id, email: user.email, role: user.role}
 
     return res.json({
         msg: 'Logged in successfully.',
         accessToken,
         refreshToken,
-        user,
+        userData,
     });
 };
 
-// Find a single New with an id
-exports.findOne = (req, res) => {
-    const id = req.params.id;
-
-    console.log(id);
-
-    usersModel.findByPk(id)
-        .then(data => {
-            res.send(data);
-        })
-        .catch(err => {
-            res.status(500).send({
-                message: "Error retrieving usersModel with id=" + id
-            });
-        });
-};
 exports.refreshToken = async (req, res) => {
     const accessTokenFromHeader = req.headers.x_authorization;
     if (!accessTokenFromHeader) {
@@ -131,7 +119,7 @@ exports.refreshToken = async (req, res) => {
 
     const username = decoded.username; // Lấy username từ payload
 
-    const user = await usersModel.findOne({ where: { username: username } });
+    const user = await usersModel.findOne({where: {username: username}});
     if (!user) {
         return res.status(401).send('Username does not exist.');
     }
@@ -164,56 +152,105 @@ exports.refreshToken = async (req, res) => {
 
 exports.findAll = (req, res) => {
     const searchText = req.query.searchText;
-    var condition = searchText ? { username: { [Op.like]: `%${searchText}%` } } : null;
+    let condition = searchText ? {username: {[Op.like]: `%${searchText}%`}} : null;
+    let where = parseInt(req.query.searchAll) === 1 ? {where: null} : {where: condition}
 
-    usersModel.findAll({ where: condition })
-        .then(data => {
-            res.send(data);
+    usersModel.findAll(where)
+        .then(async datas => {
+            if (!datas) {
+                return res.status(500).send('No user');
+            }
+
+            let returnData = []
+            for (const data of datas) {
+                await returnData.push({username: data.username, id: data.id, email: data.email, role: data.role});
+            }
+            return res.status(200).send(returnData);
         })
         .catch(err => {
-            res.status(500).send({
+            return res.status(500).send({
                 message:
                     err.message || "Some error occurred while retrieving users."
             });
-        });
+        })
 };
 
+// Find a single New with an id
+exports.findOne = (req, res) => {
+    const id = req.params.id
+    const role = req.user.role || null
+
+    if (parseInt(id) < 1)
+        return res.status(400).send('user not exist!');
+
+    if (!role && !(role === 'admin' || req.user.id === id)) {
+        return res.status(400).send('No permission access.');
+    }
+
+    usersModel.findByPk(id)
+        .then(data => {
+            if (!data) {
+                return res.status(500).send({
+                    message: "user not exist!"
+                });
+            } else {
+                return res.status(200).send(data);
+            }
+        })
+        .catch(err => {
+            return res.status(500).send({
+                message: "Error retrieving usersModel with id=" + id
+            });
+        });
+};
 exports.update = (req, res) => {
     const id = req.params.id;
+
+    if (parseInt(id) < 1)
+        return res.status(400).send('user not exist!');
+
+    const role = req.user.role || null
+    if (!role && !(role === 'admin' || req.user.id === id)) {
+        return res.status(400).send('No permission access.');
+    }
 
     const dataUpdate = {}
 
     //update title
-    if (req.body.title) {
-        dataUpdate.title = req.body.title
+    if (req.body.username) {
+        dataUpdate.username = req.body.username
     }
 
     //update content
-    if (req.body.content) {
-        dataUpdate.content = req.body.content
+    if (req.body.password) {
+        dataUpdate.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10));
     }
 
     //update comments list
-    if (req.body.comment) {
-        dataUpdate.comment = req.body.comment
+    if (req.body.email) {
+        dataUpdate.email = req.body.email
     }
 
-    if (!dataUpdate.title && !dataUpdate.content && !dataUpdate.comment) {
-        res.status(200).send({
+    //role
+    if (role === 'admin' && req.body.role)
+        dataUpdate.role = req.body.role
+
+    if (!dataUpdate.username && !dataUpdate.password && !dataUpdate.email && !dataUpdate.role) {
+        res.status(500).send({
             message: "Update failed!"
         });
     }
 
     usersModel.update(dataUpdate, {
-        where: { id: id }
+        where: {id: id}
     })
         .then(num => {
             if (num == 1) {
-                res.send({
+                res.status(200).send({
                     message: "New was updated successfully."
                 });
             } else {
-                res.send({
+                res.status(500).send({
                     message: `Cannot update New with id=${id}. Maybe New was not found or req.body is empty!`
                 });
             }
@@ -229,9 +266,17 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
+    if (parseInt(id) < 1)
+        return res.status(400).send('user not exist!');
+
+    const role = req.user.role || null
+    if (!role && !(role === 'admin' || req.user.id === id)) {
+        return res.status(400).send('No permission access.');
+    }
+
     console.log(req)
-    New.destroy({
-        where: { id: id }
+    usersModel.destroy({
+        where: {id: id}
     })
         .then(num => {
             if (num == 1) {
