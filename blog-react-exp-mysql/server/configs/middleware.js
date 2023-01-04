@@ -21,26 +21,10 @@ exports.isAuth = async (req, res, next) => {
     return next();
 };
 
-exports.isRole = async (req, res, next) => {
-    // console.log(req.params, req.query, req.baseUrl, req.originalUrl, req.route)
-    console.log(req.params, req.query, req.baseUrl, req.originalUrl, req.route)
-
-    const role = req.user.role || null
-
-    switch(role) {
-        case 'admin':
-            // code block
-            break;
-        case 'edit':
-            // code block
-            break;
-        case null:
-            // code block
-            break;
-        default:
-        // code block
+exports.isEmpty = (obj) => {
+    for(let prop in obj) {
+        if(obj.hasOwnProperty(prop))
+            return false;
     }
-
-    console.log(role)
-    return next();
-};
+    return true;
+}

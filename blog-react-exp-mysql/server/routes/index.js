@@ -3,33 +3,50 @@ module.exports = app => {
     const router = express.Router();
     const userRoutes = require('./userRoutes');
     const postRoutes = require('./postRoutes');
-    // const fileUploader = require('../configs/cloudinaryConfig');
+    const commentRoutes = require('./commentRoutes');
+    const fileUploader = require('../configs/cloudinaryConfig');
+
+    const db = require('../models')
+    const mediaModel = db.media
 
     const userControllers = require('../controllers/userController');
 
     //user, auth
     app.use('/api/auth', userRoutes);
 
-    // app.post("/user/register", userControllers.register);
-    // app.post('/user/login', userControllers.login);
-    // app.post('/auth/refresh', userControllers.refreshToken);
-    //update user
-    // router.post('/user', middleware.isAuth, userControllers.update);
-
-    //search user
-    // router.get('/search/user', middleware.isAuth, userControllers.getUsers);
-    // router.get('/search/user', userControllers.getUsers);
-
     //url post
     app.use('/api/post', postRoutes);
 
     //upload image
-    // app.post('/api/file-upload', fileUploader.single('file'), (req, res, next) => {
-    //     if (!req.file) {
-    //         next(new Error('No file uploaded!'));
-    //         return;
-    //     }
-    //
-    //     res.json({ link: req.file.path });
-    // });
+    app.post('/api/file-upload', fileUploader.single('file'), async (req, res, next) => {
+        if (!req.file) {
+            next(new Error('No file uploaded!'));
+            return;
+        }
+
+        let file
+        await mediaModel.create({
+            'originalname': req.file.originalname,
+            'name': req.file.filename,
+            'type': req.file.mimetype,
+            'path': req.file.path
+        })
+            .then(data => {
+                if (!data)
+                    return res.status(400).send('Has error when insert file!');
+
+                file = data
+            })
+            .catch(err => {
+                return res.status(400).send({
+                    message:
+                        err.message || "Some error occurred while insert file!"
+                });
+            });
+
+        return res.status(200).json(file);
+    });
+
+    //comment
+    app.use('/api/comment', commentRoutes);
 }

@@ -33,7 +33,7 @@ exports.register = (req, res) => {
         if (created) {
             return res.status(200).send({username: username, id: user.id, email: email});
         }
-        return res.status(500).send({
+        return res.status(400).send({
             message: "This account has already existed."
         });
     })
@@ -158,7 +158,7 @@ exports.findAll = (req, res) => {
     usersModel.findAll(where)
         .then(async datas => {
             if (!datas) {
-                return res.status(500).send('No user');
+                return res.status(400).send('No user');
             }
 
             let returnData = []
@@ -168,7 +168,7 @@ exports.findAll = (req, res) => {
             return res.status(200).send(returnData);
         })
         .catch(err => {
-            return res.status(500).send({
+            return res.status(400).send({
                 message:
                     err.message || "Some error occurred while retrieving users."
             });
@@ -190,7 +190,7 @@ exports.findOne = (req, res) => {
     usersModel.findByPk(id)
         .then(data => {
             if (!data) {
-                return res.status(500).send({
+                return res.status(400).send({
                     message: "user not exist!"
                 });
             } else {
@@ -198,7 +198,7 @@ exports.findOne = (req, res) => {
             }
         })
         .catch(err => {
-            return res.status(500).send({
+            return res.status(400).send({
                 message: "Error retrieving usersModel with id=" + id
             });
         });
@@ -236,7 +236,7 @@ exports.update = (req, res) => {
         dataUpdate.role = req.body.role
 
     if (!dataUpdate.username && !dataUpdate.password && !dataUpdate.email && !dataUpdate.role) {
-        res.status(500).send({
+        res.status(400).send({
             message: "Update failed!"
         });
     }
@@ -250,13 +250,13 @@ exports.update = (req, res) => {
                     message: "New was updated successfully."
                 });
             } else {
-                res.status(500).send({
+                res.status(400).send({
                     message: `Cannot update New with id=${id}. Maybe New was not found or req.body is empty!`
                 });
             }
         })
         .catch(err => {
-            res.status(500).send({
+            res.status(400).send({
                 message: "Error updating New with id=" + id
             });
         });
@@ -290,7 +290,7 @@ exports.delete = (req, res) => {
             }
         })
         .catch(err => {
-            res.status(500).send({
+            res.status(400).send({
                 message: "Could not delete New with id=" + id
             });
         });

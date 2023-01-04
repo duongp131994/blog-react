@@ -18,5 +18,6 @@ db.users= require("./usersModel.js")(dbSequelize, Sequelize);
 db.post= require("./postModel.js")(dbSequelize, Sequelize);
 db.category= require("./categoryModel.js")(dbSequelize, Sequelize);
 db.comment= require("./commentModel.js")(dbSequelize, Sequelize);
+db.media= require("./media.js")(dbSequelize, Sequelize);
 
 module.exports = db;
