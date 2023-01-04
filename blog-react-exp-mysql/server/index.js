@@ -49,6 +49,10 @@ const initDB = async (db) => {
             where: {email: "admin@example.com"},
             defaults: {username: "admin", role: 'admin', email: "admin@example.com", password: hashPassword, refresh_token: refreshToken},
         });
+        await db.users.findOrCreate({
+            where: {email: "anonymous@example.com"},
+            defaults: {username: "anonymous", role: null, email: "anonymous@example.com", password: hashPassword, refresh_token: refreshToken},
+        });
         console.log('Connection has been established successfully.');
     } catch (error) {
         console.error('Unable to connect to the database:', error);

@@ -153,7 +153,8 @@ exports.refreshToken = async (req, res) => {
 exports.findAll = (req, res) => {
     const searchText = req.query.searchText;
     let condition = searchText ? {username: {[Op.like]: `%${searchText}%`}} : null;
-    let where = parseInt(req.query.searchAll) === 1 ? {where: null} : {where: condition}
+    const searchAll = req.query.searchAll || 0;
+    let where = parseInt(searchAll) === 1 ? {where: null} : {where: condition}
 
     usersModel.findAll(where)
         .then(async datas => {
@@ -180,7 +181,7 @@ exports.findOne = (req, res) => {
     const id = req.params.id
     const role = req.user.role || null
 
-    if (parseInt(id) < 1)
+    if (!(parseInt(id) > 0))
         return res.status(400).send('user not exist!');
 
     if (!role && !(role === 'admin' || req.user.id === id)) {
@@ -206,7 +207,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
     const id = req.params.id;
 
-    if (parseInt(id) < 1)
+    if (!(parseInt(id) > 0))
         return res.status(400).send('user not exist!');
 
     const role = req.user.role || null
@@ -266,7 +267,7 @@ exports.update = (req, res) => {
 exports.delete = (req, res) => {
     const id = req.params.id;
 
-    if (parseInt(id) < 1)
+    if (!(parseInt(id) > 0))
         return res.status(400).send('user not exist!');
 
     const role = req.user.role || null

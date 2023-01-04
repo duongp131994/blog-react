@@ -16,13 +16,13 @@ exports.create = (req, res) => {
     if (req.body.content.length < 40) {
         return res.status(400).send("Content too short!");
     }
-    if (!req.body.category && parseInt(req.body.category) < 1) {
+    if (!req.body.category && !(parseInt(req.body.category) > 0)) {
         return res.status(400).send("Category can not be empty!");
     }
     if (!req.body.theme) {
         return res.status(400).send("Theme can not be empty!");
     }
-    if (!req.body.author && parseInt(req.body.author) < 1) {
+    if (!req.body.author && !(parseInt(req.body.author) > 0)) {
         return res.status(400).send("Author can not be empty!");
     }
 
@@ -67,12 +67,17 @@ exports.create = (req, res) => {
 exports.findAll = (req, res) => {
     const searchText = req.query.searchText;
     let condition = searchText ? {
-        title: {[Op.like]: `%${searchText}%`},
-        excerpt: {[Op.like]: `%${searchText}%`}
+        [Op.or]: [
+            {title: {[Op.like]: `%${searchText}%`}},
+            {excerpt: {[Op.like]: `%${searchText}%`}}
+        ]
     } : null;
-    let where = parseInt(req.query.searchAll) === 1 ? {where: null} : {where: condition}
+    const searchAll = req.query.searchAll || 0;
+    let where = parseInt(searchAll) === 1 ? {where: null} : {where: condition}
 
-    postModel.findAll({where: condition})
+    console.log(searchAll, parseInt(searchAll) === 1, where)
+
+    postModel.findAll(where)
         .then(async datas => {
             if (!datas) {
                 return res.status(400).send('No post');
@@ -92,11 +97,11 @@ exports.findAll = (req, res) => {
 exports.findByCategory = (req, res) => {
     const category = parseInt(req.params.id)
 
-    if (category < 1) {
+    if (!(category > 0)) {
         return res.status(400).send("Category can not be empty!");
     }
     const published = req.query.published || 1;
-    let where = parseInt(published) > 0 ? {published: published, category} : {published: 0, category}
+    let where = parseInt(published) > 0 ? {published: published, category} : {category}
 
     postModel.findAll({where: where})
         .then(datas => {
@@ -136,8 +141,8 @@ exports.findAllPublished = (req, res) => {
 exports.findOne = (req, res) => {
     const id = parseInt(req.params.id);
 
-    if (id < 1) {
-        return res.status(400).send("Post can not be empty!");
+    if (!(id > 0)) {
+        return res.status(400).send("Post id can not be empty!");
     }
 
     postModel.findByPk(id)
@@ -159,7 +164,7 @@ exports.findOne = (req, res) => {
 exports.update = async (req, res) => {
     const id = parseInt(req.params.id);
 
-    if (id < 1)
+    if (!(id > 0))
         return res.status(400).send('post not exist!');
 
     const role = req.user.role || null
@@ -224,7 +229,7 @@ exports.update = async (req, res) => {
 exports.delete = (req, res) => {
     const id = parseInt(req.params.id);
 
-    if (id < 1)
+    if (!(id > 0))
         return res.status(400).send('post not exist!');
 
     const role = req.user.role || null
