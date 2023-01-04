@@ -3,9 +3,6 @@ const router = express.Router();
 const post = require("../controllers/postController.js");
 const middleware = require('../middleware');
 
-// Create a new Tutorial
-router.post("/", middleware.isAuth, post.create);
-
 // Retrieve all post
 router.get("/", post.findAll);
 
@@ -17,6 +14,9 @@ router.get("/category/:id", post.findByCategory);
 
 // Retrieve a single Tutorial with id
 router.get("/:id", post.findOne);
+
+// Create a new Tutorial
+router.post("/", middleware.isAuth, post.create);
 
 // Update a Tutorial with id
 router.put("/:id", middleware.isAuth, post.update);
