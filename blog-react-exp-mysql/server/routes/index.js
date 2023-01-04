@@ -4,6 +4,7 @@ module.exports = app => {
     const userRoutes = require('./userRoutes');
     const postRoutes = require('./postRoutes');
     const commentRoutes = require('./commentRoutes');
+    const categoryRoutes = require('./categoryRoutes');
     const fileUploader = require('../configs/cloudinaryConfig');
 
     const db = require('../models')
@@ -49,4 +50,7 @@ module.exports = app => {
 
     //comment
     app.use('/api/comment', commentRoutes);
+
+    //category
+    app.use('/api/category', categoryRoutes);
 }

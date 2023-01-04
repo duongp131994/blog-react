@@ -243,17 +243,17 @@ exports.delete = (req, res) => {
         .then(num => {
             if (num == 1) {
                 return res.status(200).send({
-                    message: "New was deleted successfully!"
+                    message: "post was deleted successfully!"
                 });
             } else {
                 return res.status(400).send({
-                    message: `Cannot delete New with id=${id}. Maybe New was not found!`
+                    message: `Cannot delete post with id=${id}. Maybe New was not found!`
                 });
             }
         })
         .catch(err => {
             return res.status(400).send({
-                message: "Could not delete New with id=" + id
+                message: "Could not delete post with id=" + id
             });
         });
 };
