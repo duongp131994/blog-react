@@ -31,7 +31,7 @@ const RichtextEditor = () => {
     };
     const saveContent = async () => {
         let editorContent = draftToHtml(convertToRaw(editorState.getCurrentContent()))
-
+        console.log(editorContent, editorState.getCurrentContent(), 'xxxxx', draftToHtml(editorState.getCurrentContent()))
         await axios.get(API_URL + '/api/upload-content', editorContent)
             .then((res) => {
                 resolve({data: {link: res.data.link}});
