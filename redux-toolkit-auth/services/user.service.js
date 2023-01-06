@@ -5,15 +5,15 @@ const getPublicContent = () => {
 };
 
 const getUserBoard = () => {
-    return httpClient.get("/user");
+    return httpClient('accessToken').get("/user");
 };
 
 const getModeratorBoard = () => {
-    return httpClient.get("/mod");
+    return httpClient('accessToken').get("/mod");
 };
 
 const getAdminBoard = () => {
-    return httpClient.get("/admin");
+    return httpClient('accessToken').get("/admin");
 };
 
 const UserService = {
