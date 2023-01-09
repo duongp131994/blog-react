@@ -104,6 +104,66 @@ exports.login = async (req, res) => {
     });
 };
 
+exports.logout = async (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    const user = await usersModel.findOne({where: {email: email}});
+    if (!user) {
+        return res.status(401).send('Username does not exist.');
+    }
+
+    const isPasswordValid = bcrypt.compareSync(password, user.password);
+    if (!isPasswordValid) {
+        return res.status(401).send('Password not invalid.');
+    }
+
+    const dataForAccessToken = {
+        username: user.username,
+    };
+    const accessToken = await authMethod.generateToken(
+        dataForAccessToken,
+        process.env.ACCESS_TOKEN_SECRET,
+        process.env.ACCESS_TOKEN_LIFE,
+    );
+
+    if (!accessToken) {
+        return res.status(401).send('Login failed, please try again.');
+    }
+
+    // tạo 1 refresh token ngẫu nhiên
+    let refreshToken = await authMethod.generateToken(
+        dataForAccessToken,
+        process.env.REFRESH_TOKEN_SECRET,
+        process.env.REFRESH_TOKEN_LIFE,
+    );
+
+    //update refresh_token when this is expired or first login
+    let updateRefreshToken = true;
+    if (!!user.refresh_token) {
+        const verified = await authMethod.verifyToken(user.refresh_token, process.env.REFRESH_TOKEN_SECRET)
+        if (verified) {
+            refreshToken = user.refresh_token
+            updateRefreshToken = false
+        }
+    }
+    if (updateRefreshToken) {
+        const updatedRows = await usersModel.update(
+            {refresh_token: refreshToken},
+            {where: {id: user.id}}
+        );
+    }
+
+    const userData = {username: user.username, id: user.id, email: user.email, role: user.role}
+
+    return res.json({
+        msg: 'Logged in successfully.',
+        accessToken,
+        refreshToken,
+        userData,
+    });
+};
+
 exports.refreshToken = async (req, res) => {
     const accessTokenFromHeader = req.headers.x_authorization;
     if (!accessTokenFromHeader) {
