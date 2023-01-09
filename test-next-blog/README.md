@@ -6,7 +6,7 @@ This example will show you how to create a Nextjs blog with Sequelize in typescr
 - Admin Dasboard to mange categoryies, blogs,…
 - Landing page to display your blogs,…
 
-Server entry point is `/index.ts` in development and `/index.js` in production.
+Server entry point is `/index.ts` in development and `/tocken.js` in production.
 The second directory should be added to `.gitignore`.
 
 ## How to run
