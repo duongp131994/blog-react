@@ -5,15 +5,17 @@ import App from './App';
 
 import { configureStore } from '@reduxjs/toolkit'
 import { Provider } from 'react-redux'
-import { userReducer } from './store/userSlice';
-
-// import reportWebVitals from './reportWebVitals';
+import userSliceData from './store/userSlice';
+import messageReducer from './store/message';
 
 const store = configureStore({
-    reducer: {//changing state and get state
-        userData: userReducer
+    reducer: {
+        userData: userSliceData,
+        messageReducer,
     }
 })
+
+import setupInterceptors from "./services/setupInterceptors";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -26,4 +28,4 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-// reportWebVitals();
+setupInterceptors(store);

@@ -10,7 +10,7 @@ router.post("/signup", user.register);
 router.post("/signin", user.login);
 
 // Retrieve all user
-router.post("/logout", user.logout);
+// router.post("/logout", user.logout);
 
 // Retrieve accessToken
 router.post("/refresh", user.refreshToken);

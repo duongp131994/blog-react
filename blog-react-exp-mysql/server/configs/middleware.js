@@ -10,6 +10,7 @@ exports.isAuth = async (req, res, next) => {
         return res.status(400).send('Access token not found.');
     }
 
+    //TODO: check them truong hop tocken sai(khong phai het han), xem lai response guoi di
     const verified = await authMethod.verifyToken(accessTokenFromHeader, process.env.ACCESS_TOKEN_SECRET)
     if (!verified) {
         return res.status(400).send('No permission access.');

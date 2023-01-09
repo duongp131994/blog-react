@@ -44,12 +44,16 @@ exports.login = async (req, res) => {
 
     const user = await usersModel.findOne({where: {email: email}});
     if (!user) {
-        return res.status(401).send('Username does not exist.');
+        return res.status(401).send({
+            message: 'Username does not exist.'
+        });
     }
 
     const isPasswordValid = bcrypt.compareSync(password, user.password);
     if (!isPasswordValid) {
-        return res.status(401).send('Password not invalid.');
+        return res.status(401).send({
+            message: 'Password not invalid.'
+        });
     }
 
     const dataForAccessToken = {
@@ -62,7 +66,9 @@ exports.login = async (req, res) => {
     );
 
     if (!accessToken) {
-        return res.status(401).send('Login failed, please try again.');
+        return res.status(401).send({
+            message: 'Login failed, please try again.'
+        });
     }
 
     // tạo 1 refresh token ngẫu nhiên

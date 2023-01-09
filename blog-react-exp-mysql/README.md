@@ -13,3 +13,6 @@ https://viblo.asia/p/tim-hieu-ve-proxy-trong-javascript-yMnKMb0jZ7P
 https://techmaster.vn/posts/34119/tao-ung-dung-serverless
 https://vntalking.com/cach-to-chuc-ma-nguon-http-client-khoa-hoc-cho-du-an-vuejs.html
 https://www.ezfrontend.com/docs/dang-nhap-voi-jwt#4-handle-login-form-submit
+
+https://viblo.asia/p/xac-thuc-rest-api-cua-node-express-mongoose-va-passportjs-YWOZrxnY5Q0
+su dung uuid express
