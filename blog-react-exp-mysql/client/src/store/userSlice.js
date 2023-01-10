@@ -70,7 +70,6 @@ const userSlice = createSlice({
     extraReducers: {
         [register.fulfilled]: (state, action) => {
             state.isLoggedIn = false;
-            window.location.replace("/login");
         },
         [register.rejected]: (state, action) => {
             state.isLoggedIn = false;

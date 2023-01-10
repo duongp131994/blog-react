@@ -15,8 +15,9 @@ const store = configureStore({
     }
 })
 
-import setupInterceptors from "./services/setupInterceptors";
-
+// import setupInterceptors from "./services/setupInterceptors";
+console.clear()
+console.log(123)
 ReactDOM.render(
   <React.StrictMode>
       <Provider store={store}>
@@ -28,4 +29,4 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-setupInterceptors(store);
+// setupInterceptors(store);

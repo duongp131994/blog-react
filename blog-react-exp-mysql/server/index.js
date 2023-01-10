@@ -58,6 +58,7 @@ const initDB = async (db) => {
         console.error('Unable to connect to the database:', error);
     }
 };
+
 initDB(db)
 
 const PORT = process.env.PORT || 3000;
