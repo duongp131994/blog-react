@@ -4,7 +4,7 @@ import { createContext, useEffect, useState } from "react";
 export const AuthContext = createContext();
 
 export const AuthContexProvider = ({ children }) => {
-  const API_URL = "http://localhost:3001"
+  const API_URL = "http://localhost:3002"
   const [currentUser, setCurrentUser] = useState(
     JSON.parse(localStorage.getItem("user")) || null
   );

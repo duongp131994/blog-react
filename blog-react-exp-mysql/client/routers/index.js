@@ -4,7 +4,6 @@ import Home from "../pages/Home";
 import About from "../pages/About";
 import Contact from "../pages/Contact";
 import NotFound from "../pages/NotFound";
-import Test from "../pages/TestComponent";
 
 const publicRoutes = [
     {
@@ -20,14 +19,6 @@ const publicRoutes = [
         id: "about",
         link: "/about",
         component: About
-    },
-    {
-        path: '/test',
-        name: "test",
-        id: "test",
-        link: "/test",
-        component: Test,
-        layout: false
     },
     {
         path: '/contact',

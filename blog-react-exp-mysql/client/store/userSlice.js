@@ -4,8 +4,7 @@ import AuthService from "../services/auth.service";
 import {setMessage} from "./message";
 
 const user = JSON.parse(localStorage.getItem("D_user"));
-const initialState = {}
-initialState.user = user
+const initialState = user
     ? { isLoggedIn: true, user }
     : { isLoggedIn: false, user: null };
 
@@ -71,6 +70,7 @@ const userSlice = createSlice({
     extraReducers: {
         [register.fulfilled]: (state, action) => {
             state.isLoggedIn = false;
+            window.location.replace("/login");
         },
         [register.rejected]: (state, action) => {
             state.isLoggedIn = false;

@@ -3,7 +3,9 @@ import "./assets/style/style.css";
 import {Routes, Route} from 'react-router-dom';
 
 import {publicRoutes} from "./routers";
-import Header from "./components/Header";
+import {Header} from "./components/Header";
+import Register from "./pages/Register";
+import Login from "./pages/Login";
 
 function App() {
     return (
@@ -18,6 +20,8 @@ function App() {
                         }
                     })
                 }
+                <Route path="/register"><Register /></Route>
+                <Route path="/login"><Login /></Route>
             </Routes>
         </div>
     );
