@@ -3,13 +3,23 @@ import React from "react"
 import {useSelector} from "react-redux"
 import Avatar from '@mui/material/Avatar'
 import Tooltip from '@mui/material/Tooltip'
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
 
 import {publicRoutes} from "../routers";
+import Register from "../pages/Register";
+import Login from "../pages/Login";
 
 import Logo from "../assets/images/logo.svg";
 
 export const TopRight = () => {
     const DataUser = useSelector((state) => state.userData)
+
+    const [loginRegister, setLoginRegister] = React.useState(0);
+    const handleOpen = (type) => {setLoginRegister(type)}
+    const handleClose = () => setLoginRegister(0);
 
     return (
         <div className="topRight">
@@ -21,13 +31,24 @@ export const TopRight = () => {
                 </Link>
             ) : (
                 <div className="topList">
-                    <Button href="#text-buttons">Link</Button>
-                    <input to="/login" className="topListItem">
-                        LOGIN
-                    </input>
-                    <input to="/register" className="topListItem">
-                        REGISTER
-                    </input>
+                    <div>
+                        <Button onClick={handleOpen}>LOGIN</Button>
+                        <Modal
+                            open={false}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box className={'D_modal'} >
+                                <Typography id="modal-modal-title" variant="h6" component="h2">
+                                    Text in a modal
+                                </Typography>
+                                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                                </Typography>
+                            </Box>
+                        </Modal>
+                    </div>
                 </div>
             )}
             <i className="topSearchIcon fas fa-search"></i>
@@ -62,7 +83,6 @@ export const Header = () => {
                         publicRoutes.map((route) => {
                             if (route.link) {
                                 if (!route.external) {
-                                    console.log(route)
                                     return (
                                         <CustomLink key={route.id} to={route.link} className="nav-link topListItem">
                                             {route.name}
