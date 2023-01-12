@@ -18,34 +18,36 @@ export const TopRight = () => {
     const DataUser = useSelector((state) => state.userData)
 
     const [loginRegister, setLoginRegister] = React.useState(0);
-    const handleOpen = (type) => {setLoginRegister(type)}
-    const handleClose = () => setLoginRegister(0);
+    const handleOpen = (data) => {
+        setLoginRegister(data)
+    }
+    const handleClose = () => {
+        setLoginRegister(0);
+    }
 
     return (
         <div className="topRight">
             {DataUser.user ? (
                 <Link to="/settings">
                     <Tooltip title={DataUser.user?.username} arrow>
-                        <Avatar className="topImg">{DataUser.user?.username ? DataUser.user?.username[0].toUpperCase() : '?'}</Avatar>
+                        <Avatar
+                            className="topImg">{DataUser.user?.username ? DataUser.user?.username[0].toUpperCase() : '?'}</Avatar>
                     </Tooltip>
                 </Link>
             ) : (
                 <div className="topList">
                     <div>
-                        <Button onClick={handleOpen}>LOGIN</Button>
+                        <Button onClick={() => handleOpen(1)}>LOGIN</Button>
+                        <Button onClick={() => handleOpen(2)}>REGISTER</Button>
                         <Modal
-                            open={false}
+                            open={loginRegister > 0}
                             onClose={handleClose}
                             aria-labelledby="modal-modal-title"
                             aria-describedby="modal-modal-description"
                         >
-                            <Box className={'D_modal'} >
-                                <Typography id="modal-modal-title" variant="h6" component="h2">
-                                    Text in a modal
-                                </Typography>
-                                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                                </Typography>
+                            <Box className={'D_modal'}>
+                                {loginRegister === 1 && <Login/>}
+                                {loginRegister === 2 && <Register/>}
                             </Box>
                         </Modal>
                     </div>
@@ -73,7 +75,13 @@ export const Header = () => {
         <header className="main-navbar top aaa">
             <div className="topLeft">
                 <a href="/" className="logo" key="homePage">
-                    <img alt="Logo" src={Logo} style={{ width: 45, height: 45, backgroundColor: 'rgb(54 32 93)', marginRight: '10px', verticalAlign: 'text-bottom' }}/>
+                    <img alt="Logo" src={Logo} style={{
+                        width: 45,
+                        height: 45,
+                        backgroundColor: 'rgb(54 32 93)',
+                        marginRight: '10px',
+                        verticalAlign: 'text-bottom'
+                    }}/>
                     Dandelionss
                 </a>
             </div>
@@ -102,7 +110,7 @@ export const Header = () => {
                     }
                 </ul>
             </div>
-            <TopRight />
+            <TopRight/>
         </header>
     )
 }

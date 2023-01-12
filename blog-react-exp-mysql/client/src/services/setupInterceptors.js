@@ -14,7 +14,7 @@ const setup = (store) => {
                 originalConfig._retry = true;
 
                 try {
-                    const rs = await httpClient('accessToken').post("/auth/refreshtoken", {
+                    const rs = await httpClient('accessToken').post("/auth/refresh", {
                         refreshToken: AuthService.getLocalRefreshToken(),
                     });
 

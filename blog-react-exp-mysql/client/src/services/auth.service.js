@@ -2,7 +2,7 @@ import httpClient from '../httpClient'
 
 const signup = async ({username, email, password}) => {
     try {
-        const response = await httpClient('').get('/api/auth/signup', {username, email, password})
+        const response = await httpClient('').post('/api/auth/signup', {username, email, password})
     } catch (e) {
         console.warn(e)
     }
@@ -10,7 +10,7 @@ const signup = async ({username, email, password}) => {
 const login = async (username, password) => {
     console.log('userLogin')
     try {
-        const response = await httpClient('').get('/api/auth/signin', {
+        const response = await httpClient('').post('/api/auth/signin', {
             username,
             password,
         })

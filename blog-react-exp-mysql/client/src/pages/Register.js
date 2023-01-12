@@ -8,17 +8,18 @@ import {unwrapResult} from "@reduxjs/toolkit";
 import "../assets/style/register.css";
 
 export default function Register() {
+    const messageReducer = useSelector((state) => state.messageReducer.message)
+    const dispatch = useDispatch()
+    const inputElement = useRef();
+
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
     const regPass = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
-    const messageReducer = useSelector((state) => state.messageReducer)
-    const inputElement = useRef();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const dispatch = useDispatch()
         const user = {username, email, password}
         const signInResult = await dispatch(register(user))
         const loggedInUser = unwrapResult(signInResult);
@@ -28,14 +29,14 @@ export default function Register() {
     };
     const inputEmail = (e) => {
         inputElement.current.style.border = "1px solid #ccc";
-        if (!regEmail.test(e.target.value)) {
+        if (e.target.value && !regEmail.test(e.target.value)) {
             inputElement.current.style.border = "1px solid red";
         }
         setEmail(e.target.value)
     }
     const inputPassword = (e) => {
         e.target.style.border = "1px solid #ccc";
-        if (!regPass.test(e.target.value)) {
+        if (e.target.value && !regPass.test(e.target.value)) {
             e.target.style.border = "1px solid red";
         }
         setPassword(e.target.value)
@@ -66,15 +67,11 @@ export default function Register() {
                     placeholder="Enter your password..."
                     onChange={(e) => inputPassword(e)}
                 />
+                <span onClick={}>Login</span>
                 <button className="registerButton" type="submit">
                     Register
                 </button>
             </form>
-            <button className="registerLoginButton">
-                <Link className="link" to="/login">
-                    Login
-                </Link>
-            </button>
             {messageReducer !== '' && <span style={{color:"red", marginTop:"10px"}}>{messageReducer}</span>}
         </div>
     );

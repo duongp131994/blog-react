@@ -7,14 +7,15 @@ import {useDispatch, useSelector} from "react-redux";
 import "../assets/style/login.css";
 
 export default function Login() {
+    const dispatch = useDispatch()
     const inputElement = useRef();
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const dispatch = useDispatch()
         const user = {email, password}
         const signInResult = await dispatch(userLogin(user))
         const loggedInUser = unwrapResult(signInResult);
@@ -23,11 +24,11 @@ export default function Login() {
         // window.location.replace("/login");
     };
 
-    const messageReducer = useSelector((state) => state.messageReducer)
+    const messageReducer = useSelector((state) => state.messageReducer.message)
 
     const inputEmail = (e) => {
         inputElement.current.style.border = "1px solid #ccc";
-        if (!regEmail.test(e.target.value)) {
+        if (e.target.value && !regEmail.test(e.target.value)) {
             inputElement.current.style.border = "1px solid red";
         }
         setEmail(e.target.value)
