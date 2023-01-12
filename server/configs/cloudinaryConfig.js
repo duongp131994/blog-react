@@ -20,3 +20,5 @@ const storage = new CloudinaryStorage({
 const uploadCloud = multer({ storage });
 
 module.exports = uploadCloud;
+
+//!(parseInt(req.body.parent) > 0)

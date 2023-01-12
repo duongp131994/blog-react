@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import {register} from "../store/userSlice";
@@ -7,32 +7,41 @@ import {unwrapResult} from "@reduxjs/toolkit";
 
 import "../assets/style/register.css";
 
-export default function Register() {
+export default function Register (props) {
+    const regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
+    const regPass = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
+
     const messageReducer = useSelector((state) => state.messageReducer.message)
     const dispatch = useDispatch()
     const inputElement = useRef();
 
     const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
-    const regPass = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
 
-    const handleSubmit = async (e) => {
+    const {handleClose, loginUserEmail, changeLoginUser} = props?.providerParent
+
+    const handleSubmit = (e) => {
         e.preventDefault();
-        const user = {username, email, password}
-        const signInResult = await dispatch(register(user))
-        const loggedInUser = unwrapResult(signInResult);
-        console.log(signInResult, loggedInUser)
+        const user = {username, email: loginUserEmail, password}
 
-        // window.location.replace("/login");
+        dispatch(register(user))
+            .unwrap()
+            .then((originalPromiseResult) => {
+                console.log(originalPromiseResult, user, messageReducer)
+            })
+            .catch((rejectedValueOrSerializedError) => {
+                console.log(rejectedValueOrSerializedError, user, messageReducer)
+            })
+
+        handleClose(1);
+        changeLoginUser(loginUserEmail);
     };
     const inputEmail = (e) => {
         inputElement.current.style.border = "1px solid #ccc";
         if (e.target.value && !regEmail.test(e.target.value)) {
             inputElement.current.style.border = "1px solid red";
         }
-        setEmail(e.target.value)
+        changeLoginUser(e.target.value)
     }
     const inputPassword = (e) => {
         e.target.style.border = "1px solid #ccc";
@@ -67,7 +76,7 @@ export default function Register() {
                     placeholder="Enter your password..."
                     onChange={(e) => inputPassword(e)}
                 />
-                <span onClick={}>Login</span>
+                <span onClick={() => {}}>Login</span>
                 <button className="registerButton" type="submit">
                     Register
                 </button>

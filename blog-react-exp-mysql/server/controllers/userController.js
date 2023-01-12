@@ -7,17 +7,17 @@ require('dotenv').config();
 
 exports.register = (req, res) => {
     if (!req.body.username) {
-        res.status(400).send({message: "User name can not be empty!"});
+        res.send({message: "User name can not be empty!"});
         return;
     }
 
     if (!req.body.email) {
-        res.status(400).send({message: "Email can not be empty!"});
+        res.send({message: "Email can not be empty!"});
         return;
     }
 
     if (!req.body.password) {
-        res.status(400).send({message: "Password can not be empty!"});
+        res.send({message: "Password can not be empty!"});
         return;
     }
 
@@ -33,7 +33,7 @@ exports.register = (req, res) => {
         if (created) {
             return res.status(200).send({username: username, id: user.id, email: email});
         }
-        return res.status(400).send({
+        return res.status(500).send({
             message: "This account has already existed."
         });
     })
@@ -44,14 +44,14 @@ exports.login = async (req, res) => {
 
     const user = await usersModel.findOne({where: {email: email}});
     if (!user) {
-        return res.status(401).send({
+        return res.send({
             message: 'Username does not exist.'
         });
     }
 
     const isPasswordValid = bcrypt.compareSync(password, user.password);
     if (!isPasswordValid) {
-        return res.status(401).send({
+        return res.send({
             message: 'Password not invalid.'
         });
     }
@@ -66,7 +66,7 @@ exports.login = async (req, res) => {
     );
 
     if (!accessToken) {
-        return res.status(401).send({
+        return res.status(404).send({
             message: 'Login failed, please try again.'
         });
     }
@@ -105,74 +105,18 @@ exports.login = async (req, res) => {
 };
 
 exports.logout = async (req, res) => {
-    const email = req.body.email;
-    const password = req.body.password;
-
-    const user = await usersModel.findOne({where: {email: email}});
-    if (!user) {
-        return res.status(401).send('Username does not exist.');
-    }
-
-    const isPasswordValid = bcrypt.compareSync(password, user.password);
-    if (!isPasswordValid) {
-        return res.status(401).send('Password not invalid.');
-    }
-
-    const dataForAccessToken = {
-        username: user.username,
-    };
-    const accessToken = await authMethod.generateToken(
-        dataForAccessToken,
-        process.env.ACCESS_TOKEN_SECRET,
-        process.env.ACCESS_TOKEN_LIFE,
-    );
-
-    if (!accessToken) {
-        return res.status(401).send('Login failed, please try again.');
-    }
-
-    // tạo 1 refresh token ngẫu nhiên
-    let refreshToken = await authMethod.generateToken(
-        dataForAccessToken,
-        process.env.REFRESH_TOKEN_SECRET,
-        process.env.REFRESH_TOKEN_LIFE,
-    );
-
-    //update refresh_token when this is expired or first login
-    let updateRefreshToken = true;
-    if (!!user.refresh_token) {
-        const verified = await authMethod.verifyToken(user.refresh_token, process.env.REFRESH_TOKEN_SECRET)
-        if (verified) {
-            refreshToken = user.refresh_token
-            updateRefreshToken = false
-        }
-    }
-    if (updateRefreshToken) {
-        const updatedRows = await usersModel.update(
-            {refresh_token: refreshToken},
-            {where: {id: user.id}}
-        );
-    }
-
-    const userData = {username: user.username, id: user.id, email: user.email, role: user.role}
-
-    return res.json({
-        msg: 'Logged in successfully.',
-        accessToken,
-        refreshToken,
-        userData,
-    });
+    return res.status(500).send('logout failed, please try again.');
 };
 
 exports.refreshToken = async (req, res) => {
     const accessTokenFromHeader = req.headers.x_authorization;
     if (!accessTokenFromHeader) {
-        return res.status(400).send('Access token not found.');
+        return res.status(403).send({ message: "Refresh Token is required!" });
     }
 
     const refreshTokenFromBody = req.body.refreshToken;
     if (!refreshTokenFromBody) {
-        return res.status(400).send('Refresh token not found.');
+        return res.status(403).send('Refresh token not found.');
     }
     // Decode access token đó
     const decoded = await authMethod.decodeToken(
@@ -180,19 +124,19 @@ exports.refreshToken = async (req, res) => {
         process.env.ACCESS_TOKEN_SECRET,
     );
     if (!decoded) {
-        return res.status(400).send('Access token is invalid.');
+        return res.status(403).send('Access token is invalid.');
     }
 
     const username = decoded.username; // Lấy username từ payload
 
     const user = await usersModel.findOne({where: {username: username}});
     if (!user) {
-        return res.status(401).send('Username does not exist.');
+        return res.status(403).send('Username does not exist.');
     }
 
     console.log(refreshTokenFromBody, user)
     if (refreshTokenFromBody !== user.refresh_token) {
-        return res.status(400).send('Refresh token is invalid.');
+        return res.status(403).send('Refresh token is invalid.');
     }
 
     // Tạo access token mới
@@ -208,10 +152,10 @@ exports.refreshToken = async (req, res) => {
     console.log(accessToken)
     if (!accessToken) {
         return res
-            .status(400)
+            .status(403)
             .send('Access token generation failed, please try again.');
     }
-    return res.json({
+    return res.status(200).json({
         accessToken,
     });
 };
@@ -225,7 +169,7 @@ exports.findAll = (req, res) => {
     usersModel.findAll(where)
         .then(async datas => {
             if (!datas) {
-                return res.status(400).send('No user');
+                return res.send('No user');
             }
 
             let returnData = []
@@ -235,7 +179,7 @@ exports.findAll = (req, res) => {
             return res.status(200).send(returnData);
         })
         .catch(err => {
-            return res.status(400).send({
+            return res.send({
                 message:
                     err.message || "Some error occurred while retrieving users."
             });
@@ -248,16 +192,20 @@ exports.findOne = (req, res) => {
     const role = req.user.role || null
 
     if (!(parseInt(id) > 0))
-        return res.status(400).send('user not exist!');
+        return res.send({
+            message: 'user not exist!'
+        });
 
     if (!role && !(role === 'admin' || req.user.id === id)) {
-        return res.status(400).send('No permission access.');
+        return res.status(403).send({
+            message: 'No permission access.'
+        });
     }
 
     usersModel.findByPk(id)
         .then(data => {
             if (!data) {
-                return res.status(400).send({
+                return res.send({
                     message: "user not exist!"
                 });
             } else {
@@ -265,7 +213,7 @@ exports.findOne = (req, res) => {
             }
         })
         .catch(err => {
-            return res.status(400).send({
+            return res.send({
                 message: "Error retrieving usersModel with id=" + id
             });
         });
@@ -274,11 +222,15 @@ exports.update = (req, res) => {
     const id = req.params.id;
 
     if (!(parseInt(id) > 0))
-        return res.status(400).send('user not exist!');
+        return res.send({
+            message: 'user not exist!'
+        });
 
     const role = req.user.role || null
     if (!role && !(role === 'admin' || req.user.id === id)) {
-        return res.status(400).send('No permission access.');
+        return res.status(403).send({
+            message: 'No permission access.'
+        });
     }
 
     const dataUpdate = {}
@@ -303,7 +255,7 @@ exports.update = (req, res) => {
         dataUpdate.role = req.body.role
 
     if (!dataUpdate.username && !dataUpdate.password && !dataUpdate.email && !dataUpdate.role) {
-        res.status(400).send({
+        res.send({
             message: "Update failed!"
         });
     }
@@ -317,13 +269,13 @@ exports.update = (req, res) => {
                     message: "New was updated successfully."
                 });
             } else {
-                res.status(400).send({
+                res.send({
                     message: `Cannot update New with id=${id}. Maybe New was not found or req.body is empty!`
                 });
             }
         })
         .catch(err => {
-            res.status(400).send({
+            res.send({
                 message: "Error updating New with id=" + id
             });
         });
@@ -334,11 +286,15 @@ exports.delete = (req, res) => {
     const id = req.params.id;
 
     if (!(parseInt(id) > 0))
-        return res.status(400).send('user not exist!');
+        return res.send({
+            message: 'user not exist!'
+        });
 
     const role = req.user.role || null
     if (!role && !(role === 'admin' || req.user.id === id)) {
-        return res.status(400).send('No permission access.');
+        return res.status(403).send({
+            message: 'No permission access.'
+        });
     }
 
     console.log(req)
@@ -357,7 +313,7 @@ exports.delete = (req, res) => {
             }
         })
         .catch(err => {
-            res.status(400).send({
+            res.send({
                 message: "Could not delete New with id=" + id
             });
         });

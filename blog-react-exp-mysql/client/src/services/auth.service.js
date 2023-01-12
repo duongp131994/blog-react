@@ -2,9 +2,10 @@ import httpClient from '../httpClient'
 
 const signup = async ({username, email, password}) => {
     try {
-        const response = await httpClient('').post('/api/auth/signup', {username, email, password})
+        return await httpClient('').post('/api/auth/signup', {username, email, password})
     } catch (e) {
         console.warn(e)
+        return e
     }
 }
 const login = async (username, password) => {
@@ -14,8 +15,10 @@ const login = async (username, password) => {
             username,
             password,
         })
+        return response
     } catch (e) {
         console.warn(e)
+        return e
     }
 }
 

@@ -1,5 +1,5 @@
 import {Link, Route, useMatch, useResolvedPath} from 'react-router-dom'
-import React from "react"
+import React, {createContext, useContext} from "react"
 import {useSelector} from "react-redux"
 import Avatar from '@mui/material/Avatar'
 import Tooltip from '@mui/material/Tooltip'
@@ -18,12 +18,21 @@ export const TopRight = () => {
     const DataUser = useSelector((state) => state.userData)
 
     const [loginRegister, setLoginRegister] = React.useState(0);
+    const [loginUserEmail, setLoginUser] = React.useState('');
     const handleOpen = (data) => {
         setLoginRegister(data)
     }
     const handleClose = () => {
         setLoginRegister(0);
     }
+
+    const changeLoginUser = (loginUser) => {
+        setLoginUser(loginUser);
+    }
+
+    const dataProvider = {handleClose, loginUserEmail, changeLoginUser};
+
+    console.log(loginUserEmail)
 
     return (
         <div className="topRight">
@@ -46,8 +55,8 @@ export const TopRight = () => {
                             aria-describedby="modal-modal-description"
                         >
                             <Box className={'D_modal'}>
-                                {loginRegister === 1 && <Login/>}
-                                {loginRegister === 2 && <Register/>}
+                                {loginRegister === 1 && <Login providerParent={dataProvider}/>}
+                                {loginRegister === 2 && <Register providerParent={dataProvider}/>}
                             </Box>
                         </Modal>
                     </div>

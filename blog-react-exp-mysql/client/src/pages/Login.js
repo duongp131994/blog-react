@@ -6,20 +6,23 @@ import {useDispatch, useSelector} from "react-redux";
 
 import "../assets/style/login.css";
 
-export default function Login() {
+export default function Login (props) {
+    const regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
+
     const dispatch = useDispatch()
     const inputElement = useRef();
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
+    const {loginUserEmail, changeLoginUser} = props?.providerParent
 
+    // const [email, setEmail] = useState(loginUser || '');
+    const [password, setPassword] = useState("");
+
+    console.log(loginUserEmail)
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const user = {email, password}
-        const signInResult = await dispatch(userLogin(user))
-        const loggedInUser = unwrapResult(signInResult);
-        console.log(signInResult, loggedInUser)
+        const user = {email: loginUserEmail, password}
+        const signInResult = await dispatch(userLogin(user)).unwrap()
+        console.log(signInResult)
 
         // window.location.replace("/login");
     };
@@ -31,7 +34,7 @@ export default function Login() {
         if (e.target.value && !regEmail.test(e.target.value)) {
             inputElement.current.style.border = "1px solid red";
         }
-        setEmail(e.target.value)
+        changeLoginUser(e.target.value)
     }
 
     return (
@@ -44,6 +47,7 @@ export default function Login() {
                     className="registerInput"
                     placeholder="Enter your email..."
                     ref={inputElement}
+                    defaultValue={loginUserEmail}
                     onChange={(e) => inputEmail(e)}
                 />
                 <label>Password</label>
@@ -53,7 +57,7 @@ export default function Login() {
                     placeholder="Enter your password..."
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button className="loginButton" type="submit" disabled={email !== '' && password !== ''}>
+                <button className="loginButton" type="submit" disabled={loginUserEmail !== '' && password !== ''}>
                     Login
                 </button>
             </form>

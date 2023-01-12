@@ -14,10 +14,18 @@ export const register = createAsyncThunk(
         try {
             const response = await AuthService.signup({username, email, password});
 
-            if (response)
-                if (typeof response.message !== 'undefined')
-                    thunkAPI.dispatch(setMessage(response.data.message));
+            console.log(response)
+
+            if (response) {
+                if (typeof response.message !== 'undefined') {
+                    console.log(response)
+                    thunkAPI.dispatch(setMessage(response.message));
+                    return thunkAPI.rejectWithValue();
+                }
+
+                console.log(response.data)
                 return response.data;
+            }
 
             return thunkAPI.rejectWithValue();
         } catch (error) {
@@ -37,13 +45,15 @@ export const userLogin = createAsyncThunk(
         try {
             const response = await AuthService.login({email, password});
 
-            if (response)
-                if (typeof response.message !== 'undefined')
-                    thunkAPI.dispatch(setMessage(response.data.message));
+            if (response) {
+                if (typeof response.message !== 'undefined') {
+                    thunkAPI.dispatch(setMessage(response.message));
+                    return thunkAPI.rejectWithValue();
+                }
 
                 thunkAPI.dispatch(setMessage(response.data.msg));
                 return response.data;
-
+            }
             return thunkAPI.rejectWithValue();
         } catch (error) {
             const message =
