@@ -5,7 +5,7 @@ import {setMessage} from "./message";
 
 const D_user = JSON.parse(localStorage.getItem("D_user"))
 const initialState = D_user
-    ? { isLoggedIn: true, D_user }
+    ? { isLoggedIn: true, user: D_user }
     : { isLoggedIn: false, user: null };
 
 export const userLogin = createAsyncThunk(
@@ -52,7 +52,11 @@ const userSlice = createSlice({
                 'refreshToken': action.payload?.refreshToken,
                 'userData': action.payload?.userData,
             }))
-            state.user = action.payload?.userData;
+            state.user = {
+                'accessToken': action.payload?.accessToken,
+                'refreshToken': action.payload?.refreshToken,
+                'userData': action.payload?.userData,
+            };
         },
         [userLogin.rejected]: (state, action) => {
             console.log(action)

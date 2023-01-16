@@ -96,6 +96,7 @@ exports.login = async (req, res) => {
 
     const userData = {username: user.username, id: user.id, email: user.email, role: user.role}
 
+    console.log(userData)
     return res.json({
         msg: 'Logged in successfully.',
         accessToken,

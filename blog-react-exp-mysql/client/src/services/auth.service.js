@@ -54,7 +54,7 @@ const logout = () => {
 
 const getCurrentUser = () => {
     let D_user = JSON.parse(localStorage.getItem("D_user"))
-
+    // JSON.parse(localStorage.getItem("D_user"))
     return D_user?.userData || null;
 };
 

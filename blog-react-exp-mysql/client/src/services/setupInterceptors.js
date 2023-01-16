@@ -1,7 +1,7 @@
 import httpClient from '../httpClient'
 import AuthService from "./auth.service";
 
-const setup = (store) => {
+export const setupInterceptors = (store) => {
     httpClient('').interceptors.response.use(
         (res) => {
             return res;
