@@ -18,7 +18,9 @@ const store = configureStore({
 // import setupInterceptors from "./services/setupInterceptors";
 console.clear()
 console.log(123)
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = ReactDOM.createRoot(container);
+root.render(
   <React.StrictMode>
       <Provider store={store}>
           <BrowserRouter>
@@ -26,7 +28,6 @@ ReactDOM.render(
           </BrowserRouter>
       </Provider>
   </React.StrictMode>,
-  document.getElementById('root')
 );
 
 // setupInterceptors(store);

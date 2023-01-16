@@ -18,22 +18,16 @@ export const TopRight = () => {
     const DataUser = useSelector((state) => state.userData)
 
     const [loginRegister, setLoginRegister] = React.useState(0);
-    const [loginUserEmail, setLoginUser] = React.useState('');
     const handleOpen = (data) => {
+        console.log(data)
         setLoginRegister(data)
     }
     const handleClose = () => {
         setLoginRegister(0);
     }
 
-    const changeLoginUser = (loginUser) => {
-        setLoginUser(loginUser);
-    }
-
-    const dataProvider = {handleClose, loginUserEmail, changeLoginUser};
-
-    console.log(loginUserEmail)
-
+    const dataProvider = {handleOpen};
+    console.log(DataUser, loginRegister)
     return (
         <div className="topRight">
             {DataUser.user ? (
@@ -55,8 +49,8 @@ export const TopRight = () => {
                             aria-describedby="modal-modal-description"
                         >
                             <Box className={'D_modal'}>
-                                {loginRegister === 1 && <Login providerParent={dataProvider}/>}
-                                {loginRegister === 2 && <Register providerParent={dataProvider}/>}
+                                {loginRegister === 1 && <Login dataProvider={dataProvider}/>}
+                                {loginRegister === 2 && <Register dataProvider={dataProvider}/>}
                             </Box>
                         </Modal>
                     </div>

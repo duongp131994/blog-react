@@ -1,4 +1,4 @@
-import { useState, useRef, useContext, useMemo } from "react";
+import React, { useState, useRef, useContext, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import {register} from "../store/userSlice";
@@ -6,6 +6,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {unwrapResult} from "@reduxjs/toolkit";
 
 import "../assets/style/register.css";
+import {setMessage} from "../store/message";
+import AuthService from "../services/auth.service";
 
 export default function Register (props) {
     const regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
@@ -17,31 +19,49 @@ export default function Register (props) {
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [email, setEmail]       = useState('');
 
-    const {handleClose, loginUserEmail, changeLoginUser} = props?.providerParent
+    const {handleOpen} = props?.dataProvider
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        const user = {username, email: loginUserEmail, password}
+        const user = {username, email, password}
 
-        dispatch(register(user))
-            .unwrap()
-            .then((originalPromiseResult) => {
-                console.log(originalPromiseResult, user, messageReducer)
-            })
-            .catch((rejectedValueOrSerializedError) => {
-                console.log(rejectedValueOrSerializedError, user, messageReducer)
-            })
+        try {
+            const response = await AuthService.signup(user);
 
-        handleClose(1);
-        changeLoginUser(loginUserEmail);
+            console.log(response)
+
+            if (response) {
+                if (!response[0]) {
+                    dispatch(setMessage(response[1]?.message))
+                    return false;
+                }
+
+                localStorage.setItem("D_login", email)
+                handleOpen(1)
+                return true;
+            }
+
+            return false;
+        } catch (error) {
+            const message =
+                (error.response &&
+                    error.response.data &&
+                    error.response.data.message) ||
+                error.message ||
+                error.toString();
+            console.log(message)
+        }
     };
+    console.log(messageReducer)
+
     const inputEmail = (e) => {
         inputElement.current.style.border = "1px solid #ccc";
         if (e.target.value && !regEmail.test(e.target.value)) {
             inputElement.current.style.border = "1px solid red";
         }
-        changeLoginUser(e.target.value)
+        setEmail(e.target.value)
     }
     const inputPassword = (e) => {
         e.target.style.border = "1px solid #ccc";
