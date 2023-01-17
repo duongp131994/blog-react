@@ -1,18 +1,15 @@
 import {Link, Route, useMatch, useResolvedPath} from 'react-router-dom'
 import React, {createContext, useContext} from "react"
 import {useSelector} from "react-redux"
-import Avatar from '@mui/material/Avatar'
-import Tooltip from '@mui/material/Tooltip'
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { styled } from '@mui/material/styles';
 
 import {publicRoutes} from "../routers";
 import Register from "../pages/Register";
 import Login from "../pages/Login";
-
+import {customTooltip as CustomTooltip} from './Tooltip'
+import {UserMenuPopper} from './UserMenuPopper'
 import Logo from "../assets/images/logo.svg";
 
 export const TopRight = () => {
@@ -32,22 +29,9 @@ export const TopRight = () => {
     return (
         <div className="topRight">
             {DataUser.isLoggedIn ? (
-                <Link to="/settings">
-                    <Tooltip title={DataUser.user?.userData?.username} arrow>
-                        <Avatar
-                            className="topImg">{DataUser.user?.userData?.username ? DataUser.user?.userData?.username[0].toUpperCase() : '?'}</Avatar>
-                    </Tooltip>
-                    <HtmlTooltip title={
-                                          <React.Fragment>
-                                              <Typography color="inherit">Tooltip with HTML</Typography>
-                                              <em>{"And here's"}</em> <b>{'some'}</b> <u>{'amazing content'}</u>.{' '}
-                                              {"It's very engaging. Right?"}
-                                          </React.Fragment>
-                                      }
-                    >
-                        <Button>HTML</Button>
-                    </HtmlTooltip>
-                </Link>
+                <div className="topList">
+                    <UserMenuPopper dataUser={DataUser} />
+                </div>
             ) : (
                 <div className="topList">
                     <div>
@@ -71,18 +55,6 @@ export const TopRight = () => {
         </div>
     )
 }
-
-const HtmlTooltip = styled(({ className, ...props }) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-        backgroundColor: '#f5f5f9',
-        color: 'rgba(0, 0, 0, 0.87)',
-        maxWidth: 220,
-        fontSize: theme.typography.pxToRem(12),
-        border: '1px solid #dadde9',
-    },
-}));
 
 const CustomLink = ({children, to, ...props}) => {
     const resolved = useResolvedPath(to)
