@@ -46,10 +46,9 @@ const login = async ({email, password}) => {
 }
 
 const logout = () => {
+    console.log('logout')
     localStorage.removeItem("D_user");
-    // return httpClient.post("/api/auth/logout").then((response) => {
-    //     return response.data;
-    // });
+    return true
 };
 
 const getCurrentUser = () => {

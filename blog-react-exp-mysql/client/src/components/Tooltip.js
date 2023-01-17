@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Avatar from "@mui/material/Avatar";
 import Tooltip, {tooltipClasses} from "@mui/material/Tooltip";
@@ -10,8 +10,12 @@ import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
+import {userLogout} from "../store/userSlice";
+import {useDispatch, useSelector} from "react-redux";
 
-export const customTooltip = ({dataUser, ...props}) => {
+export const UserMenuPopper = ({dataUser, ...props}) => {
+    const dispatch = useDispatch()
+
     const DataUser = dataUser
 
     const [openTooltip, setOpenTooltip] = React.useState(false);
@@ -35,18 +39,22 @@ export const customTooltip = ({dataUser, ...props}) => {
         return "@" + censorWord(arr[0]);
     }
 
+    const signOut = useCallback(() => {
+        dispatch(userLogout());
+    }, [dispatch]);
+
     return (
         <ClickAwayListener onClickAway={handleTooltipClose}>
             <div>
-                <HtmlTooltip
-                    PopperProps={{
-                        disablePortal: true
-                    }}
+                <CustomTooltip
+                    // PopperProps={{
+                    //     disablePortal: true
+                    // }}
                     onClose={handleTooltipClose}
                     open={openTooltip}
-                    disableFocusListener
-                    disableHoverListener
-                    disableTouchListener
+                    // disableFocusListener
+                    // disableHoverListener
+                    // disableTouchListener
                     title={
                         <React.Fragment>
                             <Box sx={{display: 'flex', p: 1, bgcolor: 'background.paper', borderRadius: 1}}>
@@ -75,7 +83,7 @@ export const customTooltip = ({dataUser, ...props}) => {
                                     <ListItemIcon>
                                         <LogoutIcon fontSize="small"/>
                                     </ListItemIcon>
-                                    <Typography variant="body2" color="text.secondary">
+                                    <Typography variant="body2" color="text.secondary" onClick={signOut}>
                                         Đăng xuất
                                     </Typography>
                                 </MenuItem>
@@ -85,17 +93,15 @@ export const customTooltip = ({dataUser, ...props}) => {
                 >
                     <Avatar onClick={handleTooltipOpen}
                             className="topImg">{DataUser.user?.userData?.username ? DataUser.user?.userData?.username[0].toUpperCase() : '?'}</Avatar>
-                </HtmlTooltip>
+                </CustomTooltip>
             </div>
         </ClickAwayListener>
     )
 }
 
 export const CustomTooltip = styled(({className, ...props}) => {
-    // console.log(props)
     return (
-        <Tooltip
-            {...props} classes={{popper: className}}/>
+        <Tooltip {...props} classes={{popper: className}}/>
 )})(({theme}) => ({
     [`& .${tooltipClasses.tooltip}`]: {
         backgroundColor: '#f5f5f9',

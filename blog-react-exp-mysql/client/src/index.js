@@ -16,8 +16,6 @@ const store = configureStore({
 })
 
 import {setupInterceptors} from "./services/setupInterceptors";
-console.clear()
-console.log(123)
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
 root.render(

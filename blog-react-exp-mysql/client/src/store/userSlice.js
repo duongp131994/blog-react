@@ -33,7 +33,8 @@ export const userLogin = createAsyncThunk(
     }
 );
 
-export const logout = createAsyncThunk("auth/logout", async () => {
+export const userLogout = createAsyncThunk("auth/userLogout", async () => {
+    console.log(localStorage.getItem("D_user"))
     await AuthService.logout();
 });
 
@@ -41,7 +42,6 @@ const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        // updateUsername: () => {}
     },
     extraReducers: {
         [userLogin.fulfilled]: (state, action) => {
@@ -59,17 +59,17 @@ const userSlice = createSlice({
             };
         },
         [userLogin.rejected]: (state, action) => {
-            console.log(action)
             state.isLoggedIn = false;
             state.user = null;
         },
-        [logout.fulfilled]: (state, action) => {
-            console.log(action)
+        [userLogout.fulfilled]: (state, action) => {
+            console.log(state, action)
             state.isLoggedIn = false;
             state.user = null;
-        }
+        },
     }
 })
 
-const { reducer } = userSlice;
+const { reducer, actions } = userSlice;
+// export const { userLogout } = actions
 export default reducer;
