@@ -6,6 +6,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {unwrapResult} from "@reduxjs/toolkit";
 
 import "../assets/style/register.css";
+import loginStyle from "../assets/style/loginStyle.css";
 import {setMessage} from "../store/message";
 import AuthService from "../services/auth.service";
 
@@ -70,9 +71,10 @@ export default function Register (props) {
         }
         setPassword(e.target.value)
     }
+    //className="register"
     return (
-        <div className="register">
-            <span className="registerTitle">Register</span>
+        <div className={loginStyle.container}>
+            <span className="title">Register</span>
             <form className="registerForm" onSubmit={handleSubmit}>
                 <label>Username</label>
                 <input
@@ -96,7 +98,7 @@ export default function Register (props) {
                     placeholder="Enter your password..."
                     onChange={(e) => inputPassword(e)}
                 />
-                <span onClick={() => {}}>Login</span>
+                <span className="loginButton" onClick={() => {handleOpen(1)}}>Login</span>
                 <button className="registerButton" type="submit">
                     Register
                 </button>
