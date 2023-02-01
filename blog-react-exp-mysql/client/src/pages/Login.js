@@ -2,7 +2,7 @@ import {useRef, useState} from "react";
 import {userLogin} from "../store/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 
-import "../assets/style/login.css";
+import styles from "../assets/style/ComponentName.module.css";
 
 export default function Login (props) {
     const regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/

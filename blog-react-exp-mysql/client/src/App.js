@@ -1,5 +1,6 @@
 import React from 'react';
 import "./assets/style/style.css";
+import "./assets/style/loginStyle.css";
 import {Routes, Route} from 'react-router-dom';
 
 import {publicRoutes} from "./routers";

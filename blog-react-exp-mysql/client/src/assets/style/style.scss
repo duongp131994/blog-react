@@ -19,13 +19,14 @@ $material-design-icons-font-directory-path: '../fonts/';
 
 @import '../fonts/material-design-icons.css';
 
-* {
+*,
+*:before,
+*:after{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: Nunito Sans;
 }
-
 body {
   min-height: 100vh;
   overflow-x: hidden;

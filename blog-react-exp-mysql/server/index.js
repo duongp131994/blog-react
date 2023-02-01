@@ -39,12 +39,6 @@ const initDB = async (db) => {
             process.env.REFRESH_TOKEN_LIFE,
         );
 
-        // console.log(refreshToken, await authMethod.generateToken(
-        //     dataForAccessToken,
-        //     process.env.ACCESS_TOKEN_SECRET,
-        //     process.env.ACCESS_TOKEN_LIFE,
-        // ))
-
         await db.users.findOrCreate({
             where: {email: "admin@example.com"},
             defaults: {username: "admin", role: 'admin', email: "admin@example.com", password: hashPassword, refresh_token: refreshToken},

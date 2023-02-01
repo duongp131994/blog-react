@@ -5,8 +5,6 @@ import {register} from "../store/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {unwrapResult} from "@reduxjs/toolkit";
 
-import "../assets/style/register.css";
-import loginStyle from "../assets/style/loginStyle.css";
 import {setMessage} from "../store/message";
 import AuthService from "../services/auth.service";
 
@@ -73,7 +71,7 @@ export default function Register (props) {
     }
     //className="register"
     return (
-        <div className={loginStyle.container}>
+        <div className="register">
             <span className="title">Register</span>
             <form className="registerForm" onSubmit={handleSubmit}>
                 <label>Username</label>
