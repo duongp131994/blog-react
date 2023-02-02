@@ -71,7 +71,7 @@ export default function Register (props) {
     }
     //className="register"
     return (
-        <div className="register">
+        <>
             <span className="title">Register</span>
             <form className="registerForm" onSubmit={handleSubmit}>
                 <label>Username</label>
@@ -96,12 +96,12 @@ export default function Register (props) {
                     placeholder="Enter your password..."
                     onChange={(e) => inputPassword(e)}
                 />
-                <span className="loginButton" onClick={() => {handleOpen(1)}}>Login</span>
                 <button className="registerButton" type="submit">
                     Register
                 </button>
+                <span className="loginButton" onClick={() => {handleOpen(1)}}>Login</span>
             </form>
             {messageReducer !== '' && <span style={{color:"red", marginTop:"10px"}}>{messageReducer}</span>}
-        </div>
+        </>
     );
 }

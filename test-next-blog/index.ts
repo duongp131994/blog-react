@@ -4,13 +4,12 @@ import next from "next";
 
 import { initDB } from "./server/models";
 
-const port = parseInt(process.env.PORT || "3001", 10);
+const port = parseInt(process.env.PORT || "3002", 10);
 const dev = process.env.NODE_ENV !== "production";
 
 async function bootstap() {
   try {
     await initDB();
-
     console.log("Connection has been established successfully.");
   } catch (err) {
     console.error("Unable to connect to the database:", err);

@@ -1,4 +1,5 @@
-form.loginForm, form.register {
+.loginForm, .register {
+  font-family: "Poppins", sans-serif;
   display: inline-block;
   width: 400px;
   max-width: 90vw;
@@ -12,42 +13,39 @@ form.loginForm, form.register {
   border: 2px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
   padding: 50px 35px;
-}
-form.loginForm *, form.register * {
-  font-family: "Poppins", sans-serif;
   color: #ffffff;
   letter-spacing: 0.5px;
   outline: none;
-  border: none;
 }
-form.loginForm h3, form.register h3 {
+.loginForm h3, .register h3 {
   font-size: 32px;
   font-weight: 500;
   line-height: 42px;
   text-align: center;
 }
-form.loginForm label, form.register label {
+.loginForm label, .register label {
   display: block;
   margin-top: 30px;
   font-size: 16px;
   font-weight: 500;
 }
-form.loginForm input, form.register input {
+.loginForm input, .register input {
   display: block;
   height: 50px;
   width: 100%;
   background-color: rgba(255, 255, 255, 0.07);
+  border: none;
   border-radius: 3px;
   padding: 0 10px;
   margin-top: 8px;
   font-size: 14px;
   font-weight: 300;
 }
-form.loginForm ::placeholder, form.register ::placeholder {
+.loginForm ::placeholder, .register ::placeholder {
   color: #e5e5e5;
 }
-form.loginForm button, form.register button {
-  margin-top: 50px;
+.loginForm button, .register button {
+  margin-top: 35px;
   width: 100%;
   background-color: #ffffff;
   color: #080710;
@@ -56,6 +54,15 @@ form.loginForm button, form.register button {
   font-weight: 600;
   border-radius: 5px;
   cursor: pointer;
+}
+.loginForm span.errorMessage,
+.loginForm span.registerButton,
+.loginForm span.loginButton, .register span.errorMessage,
+.register span.registerButton,
+.register span.loginButton {
+  text-align: center;
+  display: block;
+  margin-top: 8px;
 }
 
 /*# sourceMappingURL=loginStyle.css.map */

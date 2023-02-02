@@ -42,10 +42,10 @@ export const TopRight = () => {
                             aria-labelledby="modal-modal-title"
                             aria-describedby="modal-modal-description"
                         >
-                            <Box className={'D_modal auth_popup'}>
-                                {loginRegister === 1 && <Login dataProvider={dataProvider}/>}
-                                {loginRegister === 2 && <Register dataProvider={dataProvider}/>}
-                            </Box>
+                            <>
+                            {loginRegister === 1 && (<Box className={'D_modal auth_popup loginForm'}><Login dataProvider={dataProvider}/></Box>)}
+                            {loginRegister === 2 && (<Box className={'D_modal auth_popup register'}><Register dataProvider={dataProvider}/></Box>)}
+                            </>
                         </Modal>
                     </div>
                 </div>

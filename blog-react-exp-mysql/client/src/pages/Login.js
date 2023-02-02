@@ -1,8 +1,8 @@
-import {useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import {userLogin} from "../store/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 
-import styles from "../assets/style/ComponentName.module.css";
+import Message from "../components/Message";
 
 export default function Login (props) {
     const regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
@@ -24,10 +24,11 @@ export default function Login (props) {
         console.log(signInResult)
     };
 
-    const messageReducer = useSelector((state) => state.messageReducer.message)
+    let messageReducer = useSelector((state) => state.messageReducer.message)
 
     const inputEmail = (e) => {
         inputElement.current.style.border = "1px solid #ccc";
+        messageReducer = ''
         if (e.target.value && !regEmail.test(e.target.value)) {
             inputElement.current.style.border = "1px solid red";
         }
@@ -36,9 +37,11 @@ export default function Login (props) {
 
     console.log(email !== '' && password !== '')
     return (
-        <div className="login">
-            <span className="loginTitle">Login</span>
-            <form className="loginForm" onSubmit={handleSubmit}>
+        <>
+            <form className="" onSubmit={handleSubmit}>
+                <div>
+                    <h3 className="loginTitle">Login</h3>
+                </div>
                 <label>Email</label>
                 <input
                     type="email"
@@ -55,14 +58,13 @@ export default function Login (props) {
                     placeholder="Enter your password..."
                     onChange={(e) => setPassword(e.target.value)}
                 />
+                {messageReducer !== '' && <span className={'errorMessage'}>{messageReducer}</span>}
                 <button className="loginButton" type="submit" disabled={!(email !== '' && password !== '')}>
                     Login
                 </button>
+                <span className="registerButton" onClick={() => {handleOpen(2)}}>Not a member? <ins style={{cursor: 'pointer'}}>Register</ins></span>
             </form>
-            <button className="loginRegisterButton" onClick={() => {handleOpen(2)}}>
-                Register
-            </button>
-            {messageReducer !== '' && <span style={{color:"red", marginTop:"10px"}}>{messageReducer}</span>}
-        </div>
+            {/*{messageReducer !== '' && <Message messagePosition={'fixed'} messageClass={'error_log'}><span>{messageReducer}</span></Message>}*/}
+        </>
     );
 }

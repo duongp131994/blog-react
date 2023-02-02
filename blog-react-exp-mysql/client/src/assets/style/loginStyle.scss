@@ -1,4 +1,5 @@
-form.loginForm, form.register {
+.loginForm, .register {
+  font-family: 'Poppins', sans-serif;
   display: inline-block;
   width: 400px;
   max-width: 90vw;
@@ -12,14 +13,9 @@ form.loginForm, form.register {
   border: 2px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 0 40px rgba(8, 7, 16, 0.6);
   padding: 50px 35px;
-
-  * {
-    font-family: 'Poppins', sans-serif;
-    color: #ffffff;
-    letter-spacing: 0.5px;
-    outline: none;
-    border: none;
-  }
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  outline: none;
 
   h3 {
     font-size: 32px;
@@ -40,6 +36,7 @@ form.loginForm, form.register {
     height: 50px;
     width: 100%;
     background-color: rgba(255, 255, 255, 0.07);
+    border: none;
     border-radius: 3px;
     padding: 0 10px;
     margin-top: 8px;
@@ -52,7 +49,7 @@ form.loginForm, form.register {
   }
 
   button {
-    margin-top: 50px;
+    margin-top: 35px;
     width: 100%;
     background-color: #ffffff;
     color: #080710;
@@ -61,5 +58,13 @@ form.loginForm, form.register {
     font-weight: 600;
     border-radius: 5px;
     cursor: pointer;
+  }
+
+  span.errorMessage,
+  span.registerButton,
+  span.loginButton {
+    text-align: center;
+    display: block;
+    margin-top: 8px;
   }
 }
