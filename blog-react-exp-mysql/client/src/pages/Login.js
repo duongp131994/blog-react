@@ -1,10 +1,13 @@
-import React, {useRef, useState} from "react";
+import React, {useRef, useState, useEffect} from "react";
 import {userLogin} from "../store/userSlice";
 import {useDispatch, useSelector} from "react-redux";
 
 import Message from "../components/Message";
+import {setMessage, clearMessage} from "../store/message";
 
 export default function Login (props) {
+    console.log('Login component')
+
     const regEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
 
     const dispatch = useDispatch()
@@ -18,24 +21,40 @@ export default function Login (props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const user = {email, password}
-        console.log(user)
         const signInResult = await dispatch(userLogin(user)).unwrap()
 
         console.log(signInResult)
     };
-
-    let messageReducer = useSelector((state) => state.messageReducer.message)
+        // useEffect(() => {
+    let messageReducer = useSelector((state) => {
+        console.log(state);
+        return state.messageReducer.message
+    })
+    // }, []);
 
     const inputEmail = (e) => {
         inputElement.current.style.border = "1px solid #ccc";
-        messageReducer = ''
+        if (messageReducer !== '') {
+            dispatch(clearMessage())
+        }
         if (e.target.value && !regEmail.test(e.target.value)) {
             inputElement.current.style.border = "1px solid red";
         }
         setEmail(e.target.value)
     }
 
-    console.log(email !== '' && password !== '')
+    const inputPassword = (e) => {
+        inputElement.current.style.border = "1px solid #ccc";
+        if (messageReducer !== '') {
+            dispatch(clearMessage())
+        }
+        if (e.target.value && !regEmail.test(e.target.value)) {
+            inputElement.current.style.border = "1px solid red";
+        }
+        setEmail(e.target.value)
+    }
+
+    console.log(messageReducer)
     return (
         <>
             <form className="" onSubmit={handleSubmit}>
@@ -57,6 +76,8 @@ export default function Login (props) {
                     className="loginInput"
                     placeholder="Enter your password..."
                     onChange={(e) => setPassword(e.target.value)}
+                    ref={inputElementPassword}
+                    onChange={(e) => inputPassword(e)}
                 />
                 {messageReducer !== '' && <span className={'errorMessage'}>{messageReducer}</span>}
                 <button className="loginButton" type="submit" disabled={!(email !== '' && password !== '')}>

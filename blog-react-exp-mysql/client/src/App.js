@@ -7,6 +7,7 @@ import {publicRoutes} from "./routers";
 import {Header} from "./components/Header";
 
 function App() {
+    console.log('app')
     return (
         <div className="App">
             <Header/>

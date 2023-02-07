@@ -18,6 +18,7 @@ const store = configureStore({
 import {setupInterceptors} from "./services/setupInterceptors";
 const container = document.getElementById('root');
 const root = ReactDOM.createRoot(container);
+
 root.render(
   <React.StrictMode>
       <Provider store={store}>
@@ -27,5 +28,12 @@ root.render(
       </Provider>
   </React.StrictMode>,
 );
+// root.render(
+//   <React.StrictMode>
+//       <Provider store={store}>
+//           <App />
+//       </Provider>
+//   </React.StrictMode>,
+// );
 
 setupInterceptors(store);
