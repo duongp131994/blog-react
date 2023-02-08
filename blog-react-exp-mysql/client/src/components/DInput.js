@@ -1,44 +1,51 @@
-import React, {useRef, useState} from "react";
+import React, {memo, useRef, useState} from "react";
 import {userLogin} from "../store/userSlice";
 
 /**
  * message component
  * @param array props
  */
-export default function DInput({children, ...props}) {
+const DInput = ({children, ...props}) => {
     const [inputValue, setInputValue] = useState(props.inputValue || '');
-    const inputElement = useRef();
 
     let inputClass = 'D_input_class '
     if (props.inputClass)
         inputClass += typeof props.inputClass === 'string' ? props.inputClass : props.inputClass.join(' ');
 
+    let inputElement
+    if (props.inputElement) {
+        inputElement = props.inputElement;
+    } else {
+        inputElement = useRef();
+    }
+
     let placeholder = 'Enter your password...'
     if (props.placeholder)
         placeholder = props.placeholder;
 
-    const inputChange = async (e) => {
+    const inputChange = (e) => {
         e.preventDefault();
-        const user = {email, password}
-        const signInResult = await dispatch(userLogin(user)).unwrap()
 
-        console.log(signInResult)
+        setInputValue(e.target.value)
+
+        if (props.inputChange) {
+            props.inputChange(e)
+        }
     };
 
     return (
         <>
             <input
-                type="password"
+                type={props.typeInput || "text"}
                 className={inputClass}
                 placeholder={placeholder}
-                onChange={(e) => setInputValue(e.target.value)}
-                defaultValue={inputValue}
+                value={inputValue}
                 ref={inputElement}
                 onChange={(e) => inputChange(e)}
             />
+            {children}
         </>
-        <div className={inputClass} style={style}>
-            <div>{children || (<span>{messageText}</span>)}</div>
-        </div>
     )
 }
+
+export default memo(DInput);
