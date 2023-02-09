@@ -1,5 +1,6 @@
 import React, {memo, useRef, useState} from "react";
 import {userLogin} from "../store/userSlice";
+import Input from "@mui/material/Input";
 
 /**
  * message component
@@ -35,14 +36,24 @@ const DInput = ({children, ...props}) => {
 
     return (
         <>
-            <input
-                type={props.typeInput || "text"}
-                className={inputClass}
-                placeholder={placeholder}
-                value={inputValue}
-                ref={inputElement}
-                onChange={(e) => inputChange(e)}
-            />
+            {props.errorInput
+                ? <Input size="sm"
+                         type={props.typeInput || "text"}
+                         style={{width: '100%'}}
+                         error
+                         className={inputClass}
+                         placeholder={placeholder}
+                         value={inputValue}
+                         ref={inputElement}
+                         onChange={(e) => inputChange(e)}/>
+               : <Input size="sm"
+                       type={props.typeInput || "text"}
+                       style={{width: '100%'}}
+                       className={inputClass}
+                       placeholder={placeholder}
+                       value={inputValue}
+                       ref={inputElement}
+                       onChange={(e) => inputChange(e)}/>}
             {children}
         </>
     )

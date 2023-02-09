@@ -6,8 +6,8 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 
 import {publicRoutes} from "../routers";
-import Register from "../pages/Register";
-import Login from "../pages/Login";
+import Register from "../components/Register";
+import Login from "../components/Login";
 import {UserMenuPopper} from './Tooltip'
 import Logo from "../assets/images/logo.svg";
 
