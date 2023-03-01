@@ -8,7 +8,7 @@ import NotFound from "../pages/NotFound";
 const publicRoutes = [
     {
         path: '/',
-        name: "home1",
+        name: "home",
         id: "home",
         link: "/",
         component: Home
